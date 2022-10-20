@@ -64,7 +64,7 @@
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">新增記錄</h5>
+                <h5 class="modal-title text-white" id="exampleModalLabel">新增記錄</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -89,10 +89,10 @@
                         @change="handleFile"
                       />
                     </div>
-                    <div class="input-group mb-3" v-else>
+                    <div class="input-group mb-3 " v-else>
                       <button
                         type="button"
-                        class="btn btn-primary mx-auto"
+                        class="btn changImg_btn mx-auto"
                         @click="removeImg"
                       >
                         更換照片
@@ -249,38 +249,38 @@
                   />
                 </div> -->
                   <!-- button group -->
-                  <div class="w-100 d-flex btn-group">
+                  <div class="w-100 d-flex btn-group mb-3">
                     <!-- favorite -->
                     <a
-                      class="btn btn-outline-dark w-50"
+                      class="btn w-50 btn_not_favorite"
                       v-if="moviePost.favorite == 0"
                       @click="addFavorite"
                     >
-                      <i class="bi bi-heart text-danger px-1"></i>
+                      <i class="bi bi-heart  px-1"></i>
                       <span>加入最愛</span>
                     </a>
                     <a
-                      class="btn btn-dark w-50"
+                      class="btn btn_favorite w-50"
                       v-if="moviePost.favorite == 1"
                       @click="addFavorite"
                     >
-                      <i class="bi bi-heart-fill text-danger px-1"></i>
+                      <i class="bi bi-heart-fill px-1"></i>
                       <span>已加入最愛</span>
                     </a>
                     <a
-                      class="btn btn-dark w-50"
+                      class="btn btn_watched w-50"
                       v-if="moviePost.watched == 1"
                       @click="addWatch"
                     >
-                      <i class="bi bi-eye text-success px-1"></i>
+                      <i class="bi bi-eye px-1"></i>
                       <span>已觀看</span>
                     </a>
                     <a
-                      class="btn btn-outline-dark w-50"
+                      class="btn w-50 btn_not_watched"
                       v-if="moviePost.watched == 0"
                       @click="addWatch"
                     >
-                      <i class="bi bi-eye-slash text-success px-1"></i>
+                      <i class="bi bi-eye-slash  px-1"></i>
                       <span>未觀看</span>
                     </a>
                   </div>
@@ -306,7 +306,7 @@
                   </div>
 
                   <button
-                    class="btn btn-dark mt-5 w-100"
+                    class="btn submit_btn mt-5 w-100"
                     type="submit"
                     :disabled="isDisable"
                   >
@@ -629,8 +629,66 @@ export default {
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out;
 }
+/* modal */
+.modal-header {
+  background-color: #032541;
+}
+/* change img  */
+.changImg_btn {
+  background-color: #032541;
+  color: #fff;
+
+}
+/* watched btn color  */
+.btn_watched {
+  color: #fff;
+  background-color: #42b983;
+  border-left: none;
+}
+.btn_not_watched {
+  color: #42b983;
+  border-color: #42b983;
+  border-left: none;
+}
+.btn_watched:hover {
+  color: #42b983;
+  border-color: #42b983;
+  background-color: #fff;
+  border-left: none;
+}
+.btn_not_watched:hover {
+  color: #fff;
+  background-color: #42b983;
+  border-left: none;
+}
+/* Favorite btn */
+.btn_not_favorite {
+  color: #fe628e;
+  border-color: #fe628e;
+  border-right: none;
+}
+.btn_not_favorite:hover {
+  color: #ffffff;
+  background-color: #fe628e;
+  border-right: none;
+}
+.btn_favorite {
+  color: #ffffff;
+  background-color: #fe628e;
+  border-color: #fe628e;
+  border-right:none;
+}
+.btn_favorite:hover {
+  color: #fe628e;
+  background-color: #fff;
+  border-right:none;
+}
 /* star  */
 .starBox {
   font-size: 30px;
+}
+.submit_btn {
+  background-color: #032541;
+  color: #fff;
 }
 </style>
