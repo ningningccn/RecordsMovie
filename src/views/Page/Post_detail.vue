@@ -24,14 +24,24 @@
               >
                 <i class="bi bi-three-dots"></i>
               </button>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu text-center">
                 <li>
-                  <a class="dropdown-item" href="#" @click="delPost"
-                    >刪除資料</a
+                  <a
+                    class="dropdown-item py-2"
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#movieDetailModal"
+                    ><i class="bi bi-pencil pe-3"></i>編輯資料</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item py-2" href="#" @click="delPost"
+                    ><i class="bi bi-trash pe-3"></i>刪除資料</a
                   >
                 </li>
               </ul>
             </div>
+
             <!--  -->
             <div class="fz-5 mt-5">
               <span class="fw-bold">
@@ -74,13 +84,23 @@
               </div>
               <div v-else>
                 <div>
+                  <span>類別:</span>
                   <span v-if="postData.inputMainValue == 'TVDrama'">
                     電視劇
                   </span>
                   <span v-if="postData.inputMainValue == 'TVShow'"> 綜藝 </span>
                   <span v-if="postData.inputMainValue == 'Cartoon'">
-                    卡通
+                    動漫
                   </span>
+                </div>
+                <div>
+                  <span>地區: </span>
+                  <span v-if="postData.inputChildValue == 'tw'">台灣</span>
+                  <span v-if="postData.inputChildValue == 'hk'">香港</span>
+                  <span v-if="postData.inputChildValue == 'cn'">大陸</span>
+                  <span v-if="postData.inputChildValue == 'kr'">韓國</span>
+                  <span v-if="postData.inputChildValue == 'jp'">日本</span>
+                  <span v-if="postData.inputChildValue == 'other'">其他</span>
                 </div>
               </div>
             </div>
@@ -164,6 +184,217 @@
       <!-- {{ postData }} -->
     </div>
   </div>
+  <!-- 修改資料 Modal -->
+  <div
+    class="modal fade"
+    id="movieDetailModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="d-flex justify-content-end pe-3 pt-3">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">紀錄日期</span>
+            <input
+              type="date"
+              class="form-control"
+              disabled="disabled"
+              :value="postData.watchDate"
+            />
+          </div>
+          <div
+            class="input-group mb-3"
+            v-if="postData.inputMainValue == 'Cartoon'"
+          >
+            <span class="input-group-text">類別</span>
+            <input class="form-control" disabled="disabled" value="卡通" />
+          </div>
+          <!-- type movie -->
+          <div v-if="postData.inputMainValue == 'Movie'">
+            <div class="input-group mb-3">
+              <span class="input-group-text">類別</span>
+              <input class="form-control" disabled="disabled" value="電影" />
+            </div>
+            <!-- 分類 -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">分類</span>
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputChildValue == 'love'"
+                value="愛情"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputChildValue == 'plot'"
+                value="劇情"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputChildValue == 'action'"
+                value="動作"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputChildValue == 'science'"
+                value="科幻"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputChildValue == 'war'"
+                value="戰爭"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputChildValue == 'fear'"
+                value="恐怖"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputChildValue == 'cartoon'"
+                value="動畫電影"
+              />
+            </div>
+            <!-- 地區 -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">地區</span>
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'HK'"
+                value="香港"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'CN'"
+                value="大陸"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'TW'"
+                value="台灣"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'US'"
+                value="美國"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'FR'"
+                value="法國"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'UK'"
+                value="英國"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'JP'"
+                value="日本"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'KR'"
+                value="韓國"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'GM'"
+                value="德國"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'TH'"
+                value="泰國"
+              />
+              <input
+                class="form-control"
+                disabled="disabled"
+                v-if="postData.inputAreaValue == 'Other'"
+                value="其他"
+              />
+            </div>
+          </div>
+          <!-- type TVDrama-->
+          <div v-if="postData.inputMainValue == 'TVDrama'">
+            <div class="input-group mb-3">
+              <span class="input-group-text">類別</span>
+              <input class="form-control" disabled="disabled" value="電視劇"/>
+            </div>
+          </div>
+
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">名稱</span>
+            <input
+              class="form-control"
+              disabled="disabled"
+              :value="postData.movieName"
+            />
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">年份</span>
+            <input class="form-control" v-model="modifyPostData.year" />
+          </div>
+          <div class="starBox d-flex text-warning">
+            <div
+              v-for="n in 5"
+              :key="n"
+              @mouseenter="enter(n)"
+              @mouseleave="out"
+              @click="ok(n)"
+            >
+              <div class="d-flex">
+                <div v-if="modifyPostData.mark < n">
+                  <i class="bi bi-star"></i>
+                </div>
+                <div v-if="modifyPostData.mark >= n">
+                  <i class="bi bi-star-fill"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn submit_btn w-100"
+            data-bs-dismiss="modal"
+            @click="modifyPost()"
+          >
+            修改資料
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- other Movie -->
   <div class="container mt-3">
     <h2 class="text-start p-4">相關類別</h2>
@@ -240,13 +471,13 @@
   <div class="position-fixed bottom-0 w-100 p-5" style="z-index: 11">
     <div
       id="favoriteToast"
-      class="toast mx-auto align-items-center bg-success text-white border-0"
+      class="toast mx-auto align-items-center toast_fav_bgc text-white border-0"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
       data-bs-delay="3000"
     >
-      <div class="toast-body mx-auto">
+      <div class="toast-body mx-auto fw-bold">
         <span class="w-100" v-if="postData.favorite == 1">
           <i class="bi bi-heart-fill"></i> 已加入最愛
         </span>
@@ -260,13 +491,13 @@
   <div class="position-fixed bottom-0 w-100 p-5" style="z-index: 11">
     <div
       id="watchedToast"
-      class="toast mx-auto align-items-center bg-success text-white border-0"
+      class="toast mx-auto align-items-center toast_watch_bgc text-white border-0"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
       data-bs-delay="3000"
     >
-      <div class="toast-body mx-auto">
+      <div class="toast-body mx-auto fw-bold">
         <span class="w-100" v-if="postData.watched == 1">
           <i class="bi bi-eye-fill"></i> 已設定觀看
         </span>
@@ -294,10 +525,14 @@ export default {
   data() {
     return {
       postData: {},
+      // 修改用的資料
+      modifyPostData: {},
       number: "",
       uid: "",
       page: 1,
       itemsPerPage: 12,
+      modifyPostDataYear: 0,
+      flag: true,
     };
   },
   methods: {
@@ -312,6 +547,7 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.postData = snapshot.val();
+            this.modifyPostData = {...snapshot.val()};
             console.log(this.postData);
           } else {
             console.log("No data available");
@@ -340,6 +576,36 @@ export default {
       console.log(`user/${vm.uid}/post/${vm.number}`);
       remove(ref(db, `user/${vm.uid}/post/${vm.number}`));
       this.$router.push("/");
+    },
+    modifyPost() {
+      let data = this.modifyPostData;
+      set(ref(db, `/user/${this.uid}/post/${this.number}`), data);
+      this.reload();
+      console.log(`updated`);
+    },
+    // star
+    enter(n) {
+      //n 取值1-5
+      if (!this.flag) {
+        console.log(n);
+        this.modifyPostData.mark = n;
+        // console.log("this.curIndex: ", this.moviePost.mark);
+      }
+    },
+    out() {
+      if (!this.flag) {
+        // 没有点击过，curIndex值才会变化
+        this.modifyPostData.mark = -1;
+      }
+    },
+    ok(n) {
+      console.log(this.flag);
+      if (this.flag == false) {
+        this.flag = true;
+      } else {
+        this.flag = false;
+      }
+      this.modifyPostData.mark = n; // 确认评价的星级数
     },
     addFavorite(val) {
       var toastLiveExample = document.getElementById("favoriteToast");
@@ -438,14 +704,14 @@ export default {
   color: white;
 }
 .btn_not_favorite:hover {
-  color: red;
+  color: #fe628e;
 }
 /* is favorite */
 .btn_favorite {
-  color: red;
+  color: #fe628e;
 }
 .btn_watched {
-  color: green;
+  color: #42b983;
 }
 .btn_favorite:hover,
 .btn_watched:hover,
@@ -453,7 +719,7 @@ export default {
   color: white;
 }
 .btn_not_watched:hover {
-  color: green;
+  color: #42b983;
 }
 
 .bb_red {
@@ -462,8 +728,27 @@ export default {
 .bb_green {
   border-bottom: 2px solid #6fff00;
 }
+/* toast */
+.toast_fav_bgc {
+  background-color: #fe628e;
+}
+.toast_watch_bgc {
+  background-color: #42b983;
+}
 
-.toastBgColor{
-  background-color: #Ecfdf5;
+/* dropdown */
+ul > li > a {
+  font-size: 16px;
+}
+
+/* star */
+
+.starBox {
+  font-size: 30px;
+}
+
+.submit_btn {
+  background-color: #032541;
+  color: #fff;
 }
 </style>

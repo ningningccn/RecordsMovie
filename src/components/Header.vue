@@ -19,11 +19,7 @@
         <router-link class="navbar-brand text-white" to="/"
           ><img src="../assets/logo.png" width="100"
         /></router-link>
-        <!-- <i class="bi bi-person-circle"></i> -->
         <div class="nav d-none d-md-flex">
-          <!-- <a class="nav-link active" aria-current="page" href="#">Home</a> -->
-          <!-- <router-link class="nav-link" to=""><i class="bi bi-plus-square"></i></router-link> -->
-          <!-- <button class="btn" @click="testHide"><i class="bi bi-plus-square"></i></button> -->
           <router-link class="nav-link" to="" @click="openModal"
             ><i class="bi bi-plus-square"></i
           ></router-link>
@@ -47,8 +43,11 @@
               class="dropdown-menu dropdown-menu-end"
               aria-labelledby="dropdownMenuLink"
             >
-              <a class="dropdown-item" href="#" @click.prevent="logout()"
-                >登出</a
+              <a
+                class="dropdown-item text-center"
+                href="#"
+                @click.prevent="logout()"
+                ><i class="bi bi-box-arrow-right pe-3"></i>登出</a
               >
             </ul>
           </div>
@@ -64,13 +63,17 @@
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title text-white" id="exampleModalLabel">新增記錄</h5>
+                <h5 class="modal-title text-white" id="exampleModalLabel">
+                  新增記錄
+                </h5>
                 <button
                   type="button"
-                  class="btn-close"
+                  class="btn"
                   data-bs-dismiss="modal"
                   aria-label="Close"
-                ></button>
+                >
+                <i class="bi bi-x-lg text-light"></i>
+                </button>
               </div>
               <!-- body -->
               <div class="modal-body">
@@ -89,7 +92,7 @@
                         @change="handleFile"
                       />
                     </div>
-                    <div class="input-group mb-3 " v-else>
+                    <div class="input-group mb-3" v-else>
                       <button
                         type="button"
                         class="btn changImg_btn mx-auto"
@@ -256,7 +259,7 @@
                       v-if="moviePost.favorite == 0"
                       @click="addFavorite"
                     >
-                      <i class="bi bi-heart  px-1"></i>
+                      <i class="bi bi-heart px-1"></i>
                       <span>加入最愛</span>
                     </a>
                     <a
@@ -280,7 +283,7 @@
                       v-if="moviePost.watched == 0"
                       @click="addWatch"
                     >
-                      <i class="bi bi-eye-slash  px-1"></i>
+                      <i class="bi bi-eye-slash px-1"></i>
                       <span>未觀看</span>
                     </a>
                   </div>
@@ -301,7 +304,6 @@
                           <i class="bi bi-star-fill"></i>
                         </div>
                       </div>
-                      <div></div>
                     </div>
                   </div>
 
@@ -637,7 +639,6 @@ export default {
 .changImg_btn {
   background-color: #032541;
   color: #fff;
-
 }
 /* watched btn color  */
 .btn_watched {
@@ -676,12 +677,12 @@ export default {
   color: #ffffff;
   background-color: #fe628e;
   border-color: #fe628e;
-  border-right:none;
+  border-right: none;
 }
 .btn_favorite:hover {
   color: #fe628e;
   background-color: #fff;
-  border-right:none;
+  border-right: none;
 }
 /* star  */
 .starBox {
@@ -690,5 +691,9 @@ export default {
 .submit_btn {
   background-color: #032541;
   color: #fff;
+}
+
+a > span {
+  font-weight: bold;
 }
 </style>

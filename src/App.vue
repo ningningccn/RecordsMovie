@@ -38,7 +38,7 @@ export default {
 @import "./assets/scss/main.scss";
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: roboto,"Microsoft jhenghei",Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -47,7 +47,6 @@ export default {
   /* position: relative;
   min-height: 100%; */
 }
-
 #nav {
   padding: 30px;
 }

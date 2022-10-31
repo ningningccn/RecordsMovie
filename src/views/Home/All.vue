@@ -82,12 +82,18 @@
       <i class="bi bi-film no-data-pic-size"></i>
       <h1 class="my-5">尚無資料</h1>
     </div>
+    <div class="text-center mt-5">
+      <div :class="{ 'spinner-border': isPageLoading }" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
+      isPageLoading: false,
       searchText: "",
       page: 1,
       itemsPerPage: 24,
@@ -99,10 +105,13 @@ export default {
       this.$router.push(`/post_detail/${id}`);
     },
     handleScroll() {
+      const vm = this;
       const { scrollHeight, scrollTop, clientHeight } =
         document.documentElement;
       if (scrollTop + clientHeight >= scrollHeight) {
-        this.page++;
+        vm.isPageLoading = true;
+        vm.page++;
+        vm.isPageLoading = false;
       }
     },
   },
@@ -115,6 +124,7 @@ export default {
           return item[1].movieName.match(this.searchText);
         });
       let filterB = filterA.filter((item, index) => {
+        console.log('index: ', index);
         return this.page * this.itemsPerPage > index;
       });
       return filterB;
