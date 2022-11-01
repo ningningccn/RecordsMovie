@@ -5,7 +5,7 @@
     <div class="card py-4" style="background-color: #f1f1f1">
       <div class="nav">
         <h4 class="px-3">飾選</h4>
-        <a href="#" class="mt-1 resetSort_size" @click="resetSort">重置飾選</a>
+        <a href="#" class="mt-1 resetSort_size" @click.prevent="resetSort()">重置飾選</a>
       </div>
       <div class="list d-flex">
         <span class="nav-link fw-bold">分類</span>
