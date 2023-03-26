@@ -1,111 +1,18 @@
 <template>
   <Header />
-  <div class="container p-1">
-    <h2 class="d-flex my-4">電視劇 ( {{ getUserPostData.length }} )</h2>
-    <div class="card py-4" style="background-color: #f1f1f1">
-      <div class="nav">
-        <h4 class="px-3">飾選</h4>
-        <a href="#" class="mt-1 resetSort_size" @click.prevent="resetSort()">重置飾選</a>
-      </div>
-      <div class="list d-flex">
-        <span class="nav-link fw-bold">分類</span>
-        <a
-          class="nav-link"
-          href="#"
-          :class="{ button_selected: sort == 'all' }"
-          @click.prevent="selectSort('all')"
-          >全部</a
-        >
-        <a
-          class="nav-link"
-          href="#"
-          :class="{ button_selected: sort == 'hk' }"
-          @click.prevent="selectSort('hk')"
-          >港劇</a
-        >
-        <a
-          class="nav-link"
-          href="#"
-          :class="{ button_selected: sort == 'tw' }"
-          @click.prevent="selectSort('tw')"
-          >台劇</a
-        >
-        <a
-          class="nav-link"
-          href="#"
-          :class="{ button_selected: sort == 'kr' }"
-          @click.prevent="selectSort('kr')"
-          >韓劇</a
-        >
-        <a
-          class="nav-link"
-          href="#"
-          :class="{ button_selected: sort == 'us' }"
-          @click.prevent="selectSort('us')"
-          >美劇</a
-        >
-        <a
-          class="nav-link"
-          href="#"
-          :class="{ button_selected: sort == 'cn' }"
-          @click.prevent="selectSort('cn')"
-          >陸劇</a
-        >
-      </div>
-    </div>
-  </div>
+  <sort-bar :sortBarOption="sortBarOption" @getEmitStatus="getEmitStatus">
+    <template #title> 電視劇 ( {{ getUserPostData.length }} ) </template>
+  </sort-bar>
   <div class="container">
     <div class="row" v-if="getUserPostData.length > 0">
       <div
         class="col-6 col-md-4 col-lg-3 col-xl-2 px-1 my-1 my-sm-2"
         v-for="(item, key) in getUserPostData"
-        :key="key"
-      >
-        <div
-          class="card card-shadow"
-          :class="{
-            bb_red: item[1].watched == 0,
-            bb_green: item[1].watched == 1,
-          }"
-          @click.prevent="pushRouter(item[0])"
-        >
-          <img :src="`${item[1].url}`" alt="" class="img-size" />
-          <div class="py-2 px-3">
-            <div class="d-flex justify-content-between">
-              <div class="fw-bold card-ellipsis">
-                {{ item[1].movieName }}
-              </div>
-              <div v-if="item[1].favorite == 1">
-                <i class="bi bi-heart-fill text-danger"></i>
-              </div>
-              <div v-if="item[1].favorite == 0">
-                <i class="bi bi-heart text-danger"></i>
-              </div>
-            </div>
-            <div class="d-flex justify-content-between card-yearColor">
-              <div class="d-flex">
-                <div v-if="item[1].inputMainValue == 'TVDrama'">電視劇</div>
-                <div class="ps-1">
-                  <span v-if="item[1].inputChildValue == 'tw'">台灣</span>
-                  <span v-if="item[1].inputChildValue == 'hk'">香港</span>
-                  <span v-if="item[1].inputChildValue == 'cn'">大陸</span>
-                  <span v-if="item[1].inputChildValue == 'kr'">韓國</span>
-                  <span v-if="item[1].inputChildValue == 'jp'">日本</span>
-                  <span v-if="item[1].inputChildValue == 'other'">其他</span>
-                </div>
-              </div>
-              <div>
-                {{ item[1].year }}
-              </div>
-            </div>
-          </div>
-        </div>
+        :key="key">
+        <card :item="item" @moveToPage="moveToPage"></card>
       </div>
     </div>
-    <div v-else class="my-5">
-      <i class="bi bi-film no-data-pic-size"></i>
-      <h1 class="my-5">尚無資料</h1>
-    </div>
+    <not-have-data v-else></not-have-data>
   </div>
   <Footer />
 </template>
@@ -113,41 +20,51 @@
 <script>
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
+import NotHaveData from "@/components/NotHaveData.vue";
+
+import SortBar from "@/components/Page/SortBar.vue";
+import Card from "@/components/Card.vue";
 
 export default {
   components: {
     Header,
     Footer,
+    NotHaveData,
+    SortBar,
+    Card,
   },
   data() {
     return {
       sort: "all",
-      filterPostData: {},
+      sortBarOption: {
+        all: {
+          label: "全部",
+        },
+        hk: {
+          label: "港劇",
+        },
+        tw: {
+          label: "台劇",
+        },
+        kr: {
+          label: "韓劇",
+        },
+        us: {
+          label: "美劇",
+        },
+        cn: {
+          label: "陸劇",
+        },
+      },
     };
   },
-  // watch: {
-  //   sort() {
-  //     this.filterPostData = this.getUserPostData.filter((item) => {
-  //       if (this.sort == "all") {
-  //         return this.getUserPostData;
-  //       }
-  //         item[1].inputChildValue,
-  //         item[1].inputChildValue == this.sort
-  //       );
-  //       return item[1].inputChildValue == this.sort;
-  //     });
-  //   },
-  // },
   methods: {
-    selectSort(val) {
-      this.sort = val;
+    getEmitStatus(status) {
+      this.sort = status;
     },
-    resetSort() {
-      this.sort = "all";
-    },
-    pushRouter(id) {
-      console.log(id);
-      this.$router.push(`/post_detail/${id}`);
+    moveToPage(uuid) {
+      console.log(uuid);
+      this.$router.push(`/post_detail/${uuid}`);
     },
     // test(e) {
     //   let vm = this;
@@ -214,10 +131,7 @@ export default {
           if (this.sort == "all") {
             return item[1].inputMainValue == "TVDrama";
           }
-          return (
-            item[1].inputMainValue == "TVDrama" &&
-            item[1].inputChildValue == this.sort
-          );
+          return item[1].inputMainValue == "TVDrama" && item[1].inputChildValue == this.sort;
         });
     },
   },
@@ -228,7 +142,6 @@ export default {
 </script>
 
 <style scoped>
-
 .list {
   overflow-x: auto;
   white-space: nowrap;
