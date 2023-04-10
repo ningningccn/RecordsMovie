@@ -1,9 +1,6 @@
 <template>
   <header>
-    <nav
-      class="navbar navbar-expand-md navbar-light"
-      style="background-color: #032541"
-    >
+    <nav class="navbar navbar-expand-md navbar-light" style="background-color: #032541">
       <div class="container-md">
         <button
           class="navbar-toggler"
@@ -12,17 +9,19 @@
           data-bs-target="#navbarNavAltMarkup"
           aria-controls="navbarNavAltMarkup"
           aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+          aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <router-link class="navbar-brand text-white" to="/"
-          ><img src="../assets/logo.png" width="100"
-        /></router-link>
+        <router-link class="navbar-brand text-white" to="/">
+          <img src="../assets/logo.png" width="100" />
+        </router-link>
         <div class="nav d-none d-md-flex">
-          <router-link class="nav-link" to="" @click="openModal"
-            ><i class="bi bi-plus-square"></i
-          ></router-link>
+          <router-link class="nav-link" to="" @click="openModal">
+            <i class="bi bi-plus-square"> </i>
+          </router-link>
+          <button class="btn nav-link outline-0" to="" @click.prevent="globalSearchStatus">
+            <i class="bi bi-search"> </i>
+          </button>
           <router-link class="nav-link" to="/movie">電影</router-link>
           <router-link class="nav-link" to="/tvDrama">電視劇</router-link>
           <router-link class="nav-link" to="/tvShow">綜藝</router-link>
@@ -34,70 +33,48 @@
               role="button"
               id="dropdownMenuLink"
               data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+              aria-expanded="false">
               <i class="bi bi-person-circle"></i>
             </a>
 
-            <ul
-              class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="dropdownMenuLink"
-            >
-              <a
-                class="dropdown-item text-center"
-                href="#"
-                @click.prevent="logout()"
-                ><i class="bi bi-box-arrow-right pe-3"></i>登出</a
-              >
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item text-center" href="#" @click.prevent="logout()">
+                <i class="bi bi-box-arrow-right pe-3"></i>
+                登出
+              </a>
             </ul>
           </div>
         </div>
         <!-- Modal -->
+        <!-- <HeaderModalAdd></HeaderModalAdd> -->
         <div
           class="modal fade"
           id="exampleModal"
           tabindex="-1"
           aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title text-white" id="exampleModalLabel">
-                  新增記錄
-                </h5>
-                <button
-                  type="button"
-                  class="btn"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                >
-                <i class="bi bi-x-lg text-light"></i>
+                <h5 class="modal-title text-white" id="exampleModalLabel">新增記錄</h5>
+                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+                  <i class="bi bi-x-lg text-light"></i>
                 </button>
               </div>
               <!-- body -->
               <div class="modal-body">
                 <form @submit.prevent="addData()">
                   <div>
-                    <img
-                      v-if="showImg"
-                      :src="showImg"
-                      class="w-75 mx-auto mb-3"
-                    />
+                    <img v-if="showImg" :src="showImg" class="w-75 mx-auto mb-3" />
                     <div class="input-group mb-3" v-if="!showImg">
                       <input
                         type="file"
                         accept="image/*"
                         class="form-control"
-                        @change="handleFile"
-                      />
+                        @change="handleFile" />
                     </div>
                     <div class="input-group mb-3" v-else>
-                      <button
-                        type="button"
-                        class="btn changImg_btn mx-auto"
-                        @click="removeImg"
-                      >
+                      <button type="button" class="btn changImg_btn mx-auto" @click="removeImg">
                         更換照片
                       </button>
                     </div>
@@ -108,18 +85,14 @@
                       type="date"
                       class="form-control"
                       required
-                      v-model="moviePost.watchDate"
-                    />
+                      v-model="moviePost.watchDate" />
                   </div>
                   <div class="input-group mb-3">
-                    <label class="input-group-text" for="inputGroupSelect01"
-                      >類別</label
-                    >
+                    <label class="input-group-text" for="inputGroupSelect01">類別</label>
                     <select
                       class="form-select"
                       id="inputGroupSelect01"
-                      v-model="moviePost.inputMainValue"
-                    >
+                      v-model="moviePost.inputMainValue">
                       <option value="none" selected disabled>請選擇</option>
                       <option value="Movie">電影</option>
                       <option value="TVDrama">電視劇</option>
@@ -127,17 +100,9 @@
                       <option value="Cartoon">動漫</option>
                     </select>
                   </div>
-                  <div
-                    v-if="moviePost.inputMainValue == 'Movie'"
-                    class="input-group mb-3"
-                  >
-                    <label class="input-group-text" for="inputGroupSelect01"
-                      >分類</label
-                    >
-                    <select
-                      class="form-select"
-                      v-model="moviePost.inputChildValue"
-                    >
+                  <div v-if="moviePost.inputMainValue == 'Movie'" class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">分類</label>
+                    <select class="form-select" v-model="moviePost.inputChildValue">
                       <option value="none" selected disabled>請選擇</option>
                       <option value="plot">劇情</option>
                       <option value="action">動作</option>
@@ -148,17 +113,9 @@
                       <option value="cartoon">動畫電影</option>
                     </select>
                   </div>
-                  <div
-                    v-if="moviePost.inputMainValue == 'Movie'"
-                    class="input-group mb-3"
-                  >
-                    <label class="input-group-text" for="inputGroupSelect01"
-                      >地區</label
-                    >
-                    <select
-                      class="form-select"
-                      v-model="moviePost.inputAreaValue"
-                    >
+                  <div v-if="moviePost.inputMainValue == 'Movie'" class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">地區</label>
+                    <select class="form-select" v-model="moviePost.inputAreaValue">
                       <option value="none" selected disabled>請選擇</option>
                       <option value="CN">大陸</option>
                       <option value="HK">香港</option>
@@ -173,17 +130,9 @@
                       <option value="Other">其他</option>
                     </select>
                   </div>
-                  <div
-                    v-if="moviePost.inputMainValue == 'TVDrama'"
-                    class="input-group mb-3"
-                  >
-                    <label class="input-group-text" for="inputGroupSelect01"
-                      >類別</label
-                    >
-                    <select
-                      class="form-select"
-                      v-model="moviePost.inputChildValue"
-                    >
+                  <div v-if="moviePost.inputMainValue == 'TVDrama'" class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">類別</label>
+                    <select class="form-select" v-model="moviePost.inputChildValue">
                       <option value="none" selected disabled>請選擇</option>
                       <option value="cn">陸劇</option>
                       <option value="kr">韓劇</option>
@@ -193,17 +142,9 @@
                       <option value="hk">港劇</option>
                     </select>
                   </div>
-                  <div
-                    v-if="moviePost.inputMainValue == 'TVShow'"
-                    class="input-group mb-3"
-                  >
-                    <label class="input-group-text" for="inputGroupSelect01"
-                      >類別</label
-                    >
-                    <select
-                      class="form-select"
-                      v-model="moviePost.inputChildValue"
-                    >
+                  <div v-if="moviePost.inputMainValue == 'TVShow'" class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">類別</label>
+                    <select class="form-select" v-model="moviePost.inputChildValue">
                       <option value="none" selected disabled>請選擇</option>
                       <option value="tw">台灣</option>
                       <option value="hk">香港</option>
@@ -219,8 +160,7 @@
                       type="text"
                       class="form-control"
                       v-model="moviePost.movieName"
-                      required
-                    />
+                      required />
                   </div>
                   <div class="input-group mb-3">
                     <span class="input-group-text">年份</span>
@@ -229,60 +169,52 @@
                       class="form-control"
                       placeholder="2022"
                       v-model="moviePost.year"
-                      required
-                    />
+                      required />
                     <!-- <span class="input-group-text">集數</span>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="1集"
-                    required
-                    v-model="moviePost.set"
-                  /> -->
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="1集"
+                        required
+                        v-model="moviePost.set"
+                      /> -->
                   </div>
                   <!-- <div class="input-group mb-3">
-                  <span class="input-group-text">評分</span>
-                  <input
-                    type="number"
-                    placeholder="1~10"
-                    min="0"
-                    max="10"
-                    class="form-control"
-                    v-model="moviePost.mark"
-                  />
-                </div> -->
+        <span class="input-group-text">評分</span>
+        <input
+          type="number"
+          placeholder="1~10"
+          min="0"
+          max="10"
+          class="form-control"
+          v-model="moviePost.mark"
+        />
+      </div> -->
                   <!-- button group -->
                   <div class="w-100 d-flex btn-group mb-3">
                     <!-- favorite -->
                     <a
                       class="btn w-50 btn_not_favorite"
                       v-if="moviePost.favorite == 0"
-                      @click="addFavorite"
-                    >
+                      @click="addFavorite">
                       <i class="bi bi-heart px-1"></i>
                       <span>加入最愛</span>
                     </a>
                     <a
                       class="btn btn_favorite w-50"
                       v-if="moviePost.favorite == 1"
-                      @click="addFavorite"
-                    >
+                      @click="addFavorite">
                       <i class="bi bi-heart-fill px-1"></i>
                       <span>已加入最愛</span>
                     </a>
-                    <a
-                      class="btn btn_watched w-50"
-                      v-if="moviePost.watched == 1"
-                      @click="addWatch"
-                    >
+                    <a class="btn btn_watched w-50" v-if="moviePost.watched == 1" @click="addWatch">
                       <i class="bi bi-eye px-1"></i>
                       <span>已觀看</span>
                     </a>
                     <a
                       class="btn w-50 btn_not_watched"
                       v-if="moviePost.watched == 0"
-                      @click="addWatch"
-                    >
+                      @click="addWatch">
                       <i class="bi bi-eye-slash px-1"></i>
                       <span>未觀看</span>
                     </a>
@@ -294,8 +226,7 @@
                       :key="n"
                       @mouseenter="enter(n)"
                       @mouseleave="out"
-                      @click="ok(n)"
-                    >
+                      @click="ok(n)">
                       <div class="d-flex">
                         <div v-if="moviePost.mark < n">
                           <i class="bi bi-star"></i>
@@ -307,76 +238,47 @@
                     </div>
                   </div>
 
-                  <button
-                    class="btn submit_btn mt-5 w-100"
-                    type="submit"
-                    :disabled="isDisable"
-                  >
+                  <button class="btn submit_btn mt-5 w-100" type="submit" :disabled="isDisable">
                     <span
                       class="spinner-border-sm"
                       role="status"
                       :class="{ 'spinner-border': isLoading }"
-                      aria-hidden="true"
-                    ></span>
+                      aria-hidden="true"></span>
                     新增
                   </button>
                 </form>
               </div>
               <!-- <div class="modal-footer">
-              <button
-                type="reset"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary" @click="addDb">
-                Save changes
-              </button>
-              <button type="button" class="btn btn-primary" @click="uploadFile">
-                upload
-              </button>
-              <button type="button" class="btn btn-primary" @click="closeModal">
-                X
-              </button>
-            </div> -->
+    <button
+      type="reset"
+      class="btn btn-secondary"
+      data-bs-dismiss="modal"
+    >
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" @click="addDb">
+      Save changes
+    </button>
+    <button type="button" class="btn btn-primary" @click="uploadFile">
+      upload
+    </button>
+    <button type="button" class="btn btn-primary" @click="closeModal">
+      X
+    </button>
+  </div> -->
             </div>
           </div>
         </div>
-
         <!-- offcanvas -->
-        <div class="offcanvas offcanvas-start" id="navbarNavAltMarkup">
-          <div class="navbar-nav h-100">
-            <button
-              type="button"
-              class="btn-close btn-close-white ms-auto me-3 my-2"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
-            <router-link class="offcanvas_link" to="/movie">電影</router-link>
-            <router-link class="offcanvas_link" to="/tvDrama"
-              >電視劇</router-link
-            >
-            <router-link class="offcanvas_link" to="/tvShow">綜藝</router-link>
-            <router-link class="offcanvas_link" to="/cartoon">動漫</router-link>
-            <router-link
-              class="offcanvas_link mt-auto"
-              to=""
-              @click.prevent="logout()"
-              >登出</router-link
-            >
-          </div>
-        </div>
+        <HeaderOffcanvas></HeaderOffcanvas>
         <!-- RWD add new data button -->
-        <router-link
-          class="nav-link d-flex d-md-none fz-1"
-          to=""
-          @click="openModal()"
+        <router-link class="nav-link d-flex d-md-none fz-1" to="" @click="openModal()"
           ><i class="bi bi-plus-square"></i
         ></router-link>
       </div>
     </nav>
   </header>
+  <GlobalSearch />
 </template>
 
 <script>
@@ -385,15 +287,21 @@ import { db, auth } from "../db";
 import { storage } from "../db";
 // @ is an alias to /src
 import { ref as fireRef, set, push, child } from "firebase/database";
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import Modal from "bootstrap/js/dist/modal";
+// import HeaderModalAdd from "@/components/HeaderModalAdd.vue";
+import GlobalSearch from "@/components/GlobalSearch.vue";
+
+import HeaderOffcanvas from "@/components/HeaderOffcanvas.vue";
 export default {
   inject: ["reload"],
+  components: {
+    // HeaderModalAdd,
+    GlobalSearch,
+
+    HeaderOffcanvas,
+  },
   data() {
     return {
       isDisable: false,
@@ -411,12 +319,8 @@ export default {
         favorite: 0,
         watched: 1,
         url: "",
-        watchDate: new Date(+new Date() + 8 * 3600 * 1000)
-          .toISOString()
-          .substr(0, 10),
-        uploadDate: new Date(+new Date() + 8 * 3600 * 1000)
-          .toISOString()
-          .substr(0, 10),
+        watchDate: new Date(+new Date() + 8 * 3600 * 1000).toISOString().substr(0, 10),
+        uploadDate: new Date(+new Date() + 8 * 3600 * 1000).toISOString().substr(0, 10),
       },
       flag: false,
     };
@@ -565,6 +469,9 @@ export default {
       }
       this.moviePost.mark = n; // 确认评价的星级数
     },
+    globalSearchStatus() {
+      this.$store.dispatch("globalSearchStatus");
+    },
     // uploadBytes(storageRef(storage,`${this.File.name}`), this.File).then((snapshot) => {
     //   console.log(snapshot)
     //   console.log(`Uploaded a blob or file!`)
@@ -619,18 +526,7 @@ export default {
 .navbar-light .navbar-toggler {
   border: 1px solid rgb(255, 255, 255);
 }
-.offcanvas {
-  background-color: #032541;
-}
-.offcanvas_link {
-  font-size: 24px;
-  display: block;
-  padding: 0.5rem 1rem;
-  color: #ffffff;
-  text-decoration: none;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out;
-}
+
 /* modal */
 .modal-header {
   background-color: #032541;
@@ -695,5 +591,9 @@ export default {
 
 a > span {
   font-weight: bold;
+}
+
+.btn:focus {
+  box-shadow: none;
 }
 </style>

@@ -22,13 +22,13 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: "/expect",
+        path: "expect",
         name: "Expect",
         component: () => import("@/views/Home/Expect.vue"),
         meta: { requiresAuth: true },
       },
       {
-        path: "/favorite",
+        path: "favorite",
         name: "Favorite",
         component: () => import("@/views/Home/Favorite.vue"),
         meta: { requiresAuth: true },
@@ -57,16 +57,6 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
-    meta: { requiresAuth: true },
-  },
-  {
     path: "/movie",
     name: "Movie",
     component: () => import("@/views/Page/Movie.vue"),
@@ -90,20 +80,42 @@ const routes = [
     component: () => import("@/views/Page/TVShow.vue"),
     meta: { requiresAuth: true },
   },
+  {
+    path: "/search",
+    name: "search",
+    component: () => import("@/views/Page/Search.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/searched/:mediaType/:mediaID",
+    name: "searched",
+    component: () => import("@/views/Page/SearchDetail.vue"),
+    meta: { requiresAuth: true },
+  },
+  // {
+  //   path: "/about",
+  //   name: "About",
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: () =>
+  //     import(/* webpackChunkName: "about" */ "../views/About.vue"),
+  //   meta: { requiresAuth: true },
+  // },
   // Home file
 ];
 // 跳轉時 移置最上
-const scrollBehavior = (to, from , savedPosition) => {
+const scrollBehavior = (to, from, savedPosition) => {
   if (savedPosition && to.meta.keepAlive) {
     return savedPosition;
   }
-  return {left: 0, top: 0};
-}
+  return { left: 0, top: 0 };
+};
 const router = createRouter({
   history: createWebHashHistory(),
   linkActiveClass: "active",
   routes,
-  scrollBehavior
+  scrollBehavior,
 });
 
 export default router;

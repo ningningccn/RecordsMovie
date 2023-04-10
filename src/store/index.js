@@ -1,13 +1,13 @@
 import { createStore } from "vuex";
 import { db, auth } from "@/db";
-import { ref, child, get} from "firebase/database";
+import { ref, child, get } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
-
 
 export default createStore({
   state: {
     userID: "",
     userPostData: {},
+    isGlobalSearch: false,
   },
   mutations: {
     GET_DB_STATE(state, val) {
@@ -15,20 +15,23 @@ export default createStore({
     },
     GET_POST_DATA(state, val) {
       state.userPostData = val;
-    }
+    },
+    globalSearchStatus(state) {
+      state.isGlobalSearch = !state.isGlobalSearch;
+    },
   },
   actions: {
     getDBState(context) {
       return new Promise((resolve, reject) => {
         onAuthStateChanged(auth, (user) => {
           if (user) {
-            console.log(user.uid)
+            console.log(user.uid);
             context.commit("GET_DB_STATE", user.uid);
             get(child(ref(db), `user/${user.uid}/post/`))
               .then((snapshot) => {
                 console.log(snapshot.exists());
                 if (snapshot.exists()) {
-                  context.commit("GET_POST_DATA",snapshot.val());
+                  context.commit("GET_POST_DATA", snapshot.val());
                 } else {
                   console.log("沒有資料");
                 }
@@ -42,6 +45,9 @@ export default createStore({
           }
         });
       });
+    },
+    globalSearchStatus(context) {
+      context.commit("globalSearchStatus");
     },
     // delPostDetail(context) {
     //   return new Promise((resolve, reject) => {
@@ -65,6 +71,6 @@ export default createStore({
   },
   getters: {
     userID: (state) => state.userID,
-    userPostData: (state) => state.userPostData
+    userPostData: (state) => state.userPostData,
   },
 });
