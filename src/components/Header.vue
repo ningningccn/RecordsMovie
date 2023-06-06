@@ -269,7 +269,7 @@
             </div>
           </div>
         </div>
-        <!-- offcanvas -->
+        <!-- mobile offcanvas -->
         <HeaderOffcanvas></HeaderOffcanvas>
         <!-- RWD add new data button -->
         <router-link class="nav-link d-flex d-md-none fz-1" to="" @click="openModal()"

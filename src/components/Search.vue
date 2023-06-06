@@ -7,25 +7,16 @@
       type="search"
       placeholder="Search"
       class="form-control"
-      :value="value"
-      @input="getSearchValue" />
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)" />
   </div>
 </template>
 
 <script>
 export default {
   name: "Search",
-  props: {
-    value: {
-      type: String,
-    },
-  },
-  methods: {
-    getSearchValue(e) {
-      console.log(e.target.value);
-      this.$emit("input", e.target.value);
-    },
-  },
+  props: ["modelValue"],
+  emits: ["update:modelValue"],
 };
 </script>
 
