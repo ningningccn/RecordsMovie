@@ -38,22 +38,22 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    component: () => import("@/views/Page/Login.vue"),
+    component: () => import("@/views/Login/Login.vue"),
   },
   {
     path: "/forget",
     name: "forget",
-    component: () => import("@/views/Page/Login/ForgetPassword.vue"),
+    component: () => import("@/views/Login/ForgetPassword.vue"),
   },
   {
     path: "/logintest",
     name: "loginTest",
-    component: () => import("@/views/Page/LoginTest.vue"),
+    component: () => import("@/views/Login/LoginTest.vue"),
   },
   {
     path: "/post_detail/:postId",
     name: "Post_detail",
-    component: () => import("@/views/Page/Post_detail.vue"),
+    component: () => import("@/views/Page/[postId].vue"),
     meta: { requiresAuth: true },
   },
   {
@@ -83,13 +83,13 @@ const routes = [
   {
     path: "/search",
     name: "search",
-    component: () => import("@/views/Page/Search.vue"),
+    component: () => import("@/views/search/index.vue"),
     meta: { requiresAuth: true },
   },
   {
     path: "/searched/:mediaType/:mediaID",
     name: "searched",
-    component: () => import("@/views/Page/SearchDetail.vue"),
+    component: () => import("@/views/search/[searchId].vue"),
     meta: { requiresAuth: true },
   },
   // {

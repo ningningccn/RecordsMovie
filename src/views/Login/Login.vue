@@ -3,12 +3,10 @@
     <div class="row">
       <div class="col-md-6">
         <div class="ms-sm-auto mx-auto w-100 p-4">
-          <b class="d-flex"
-            ><img src="../../assets/logo_black.png" alt="" width="100%"
-          /></b>
+          <b class="d-flex"><img src="@/assets/logo_black.png" alt="" width="100%" /></b>
           <b class="d-flex mt-3 fz-1"
-            >你會不會有曾經看過的電影，因為時間而忘記電影名字，可以透過Records
-            Video 儲存電影，讓你可以重溫自己曾經看過的電影。</b
+            >你會不會有曾經看過的電影，因為時間而忘記電影名字，可以透過Records Video
+            儲存電影，讓你可以重溫自己曾經看過的電影。</b
           >
         </div>
       </div>
@@ -22,8 +20,7 @@
                   type="email"
                   class="form-control"
                   placeholder="name@example.com"
-                  v-model="loginForm.email"
-                />
+                  v-model="loginForm.email" />
                 <label for="floatingInput">Email address</label>
               </div>
               <div class="form-floating mb-2">
@@ -31,8 +28,7 @@
                   type="password"
                   class="form-control"
                   placeholder="Password"
-                  v-model="loginForm.password"
-                />
+                  v-model="loginForm.password" />
                 <label for="floatingPassword">Password</label>
               </div>
               <div class="text-danger fz-0 mb-2" v-if="loginError == true">
@@ -57,27 +53,20 @@
               id="signup"
               tabindex="-1"
               aria-labelledby="exampleModalLabel"
-              aria-hidden="true"
-            >
+              aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <div class="modal-title font-lg" id="exampleModalLabel">
-                      註冊
-                    </div>
+                    <div class="modal-title font-lg" id="exampleModalLabel">註冊</div>
                     <button
                       type="button"
                       class="btn-close"
                       data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
+                      aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <!-- signup error message  -->
-                    <div
-                      class="mb-3 p-3 errorMessage"
-                      v-if="signUpError == true"
-                    >
+                    <div class="mb-3 p-3 errorMessage" v-if="signUpError == true">
                       有重覆的電郵或電郵格式錯誤
                     </div>
                     <form>
@@ -86,8 +75,7 @@
                           type="email"
                           class="form-control"
                           placeholder="name@example.com"
-                          v-model="signUpForm.email"
-                        />
+                          v-model="signUpForm.email" />
                         <label for="floatingInput">Email address</label>
                       </div>
                       <div class="form-floating">
@@ -95,15 +83,11 @@
                           type="password"
                           class="form-control"
                           placeholder="Password"
-                          v-model="signUpForm.password"
-                        />
+                          v-model="signUpForm.password" />
                         <label for="floatingPassword">Password</label>
                       </div>
 
-                      <button
-                        class="w-50 btn mt-4 btn-signUp p-2"
-                        @click.prevent="signUp()"
-                      >
+                      <button class="w-50 btn mt-4 btn-signUp p-2" @click.prevent="signUp()">
                         <b>註冊</b>
                       </button>
                     </form>
@@ -123,8 +107,7 @@
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
-      data-bs-delay="3000"
-    >
+      data-bs-delay="3000">
       <div class="toast-body p-3">已成功註冊</div>
     </div>
   </div>
@@ -132,10 +115,7 @@
 
 <script>
 import { db, auth } from "@/db";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { ref as fireRef, set } from "firebase/database";
 import { Modal, Toast } from "bootstrap";
 export default {
@@ -207,7 +187,7 @@ export default {
     },
     forget() {
       this.$router.push(`/forget`);
-    }
+    },
   },
 };
 </script>

@@ -6,7 +6,7 @@
         class="col-6 col-md-4 col-lg-3 col-xl-2 px-1 my-1 my-sm-2"
         v-for="item in userPostData"
         :key="item.id">
-        <card :item="item" @moveToPage="moveToPage"></card>
+        <card :item="item"></card>
       </div>
     </div>
     <not-have-data v-else></not-have-data>
@@ -51,10 +51,6 @@ export default {
     },
   },
   methods: {
-    moveToPage(uuid) {
-      console.log(uuid);
-      this.$router.push(`/post_detail/${uuid}`);
-    },
     handleScroll() {
       const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
       if (scrollTop + clientHeight >= scrollHeight) {

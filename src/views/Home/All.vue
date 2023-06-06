@@ -1,12 +1,14 @@
 <template>
-  <search :value="searchText" @input="searchText = $event.target.value"> </search>
+  <!-- <search :value="searchText" @input="searchText = $event.target.value"> </search> -->
+  <!-- <search :value="searchText" @input="searchText = $event.target.value"> </search> -->
+  <input type="text" v-model="searchText">
   <div class="container">
     <div class="row" v-if="userPostData.length > 0">
       <div
         class="col-6 col-md-4 col-lg-3 col-xl-2 px-1 my-1 my-sm-2"
         v-for="item in userPostData"
         :key="item.id">
-        <card :item="item" @moveToPage="moveToPage"></card>
+        <card :item="item" ></card>
       </div>
     </div>
     <not-have-data v-else></not-have-data>
@@ -18,7 +20,7 @@
   </div>
 </template>
 <script>
-import Search from "@/components/Search.vue";
+// import Search from "@/components/Search.vue";
 import Card from "@/components/Card.vue";
 import NotHaveData from "@/components/NotHaveData.vue";
 export default {
@@ -31,14 +33,15 @@ export default {
     };
   },
   components: {
-    Search,
+    // Search,
     Card,
     NotHaveData,
   },
   computed: {
     userPostData() {
-      var Data = this.$store.getters.userPostData;
-      let filterA = Object.entries(Data)
+      console.log(this.searchText);
+      var data = this.$store.getters.userPostData;
+      let filterA = Object.entries(data)
         .reverse()
         .filter((item) => {
           return item[1].movieName.match(this.searchText);
@@ -115,14 +118,6 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
-    moveToPage(uuid) {
-      console.log(uuid);
-      this.$router.push(`/post_detail/${uuid}`);
-    },
-    pushRouter(id) {
-      console.log(id);
-      this.$router.push(`/post_detail/${id}`);
-    },
     handleScroll() {
       const vm = this;
       const { scrollHeight, scrollTop, clientHeight } = document.documentElement;

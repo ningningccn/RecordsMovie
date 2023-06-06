@@ -1,10 +1,7 @@
 <template>
   <div
     class="card card-shadow card_shadow_green"
-    :class="{
-      bb_red: item[1].watched == 0,
-      bb_green: item[1].watched == 1,
-    }"
+    :class="bgcolor"
     @click.prevent="moveToPage(item[0])">
     <img :src="`${item[1].url}`" alt="" class="img-size" />
     <!-- <slot name="img"></slot> -->
@@ -12,14 +9,11 @@
       <div class="d-flex justify-content-between">
         <div class="fw-bold card-ellipsis">
           <!-- <slot name="movieName"></slot> -->
-          {{ item[1].movieName }}
+          {{ movieName }}
         </div>
         <!-- <slot name="favorite"> </slot> -->
-        <div v-if="item[1].favorite == 1">
-          <i class="bi bi-heart-fill text-danger"></i>
-        </div>
-        <div v-if="item[1].favorite == 0">
-          <i class="bi bi-heart text-danger"></i>
+        <div>
+          <i :class="class_favorite"></i>
         </div>
       </div>
       <div class="d-flex justify-content-between card-yearColor">
@@ -42,7 +36,7 @@
           </div>
         </div>
         <div>
-          {{ item[1].year }}
+          {{ movieYear }}
           <!-- <slot name="year"> </slot> -->
         </div>
       </div>
@@ -55,91 +49,92 @@ export default {
   name: "Card",
   // props: ["backgroundColor", "uuid", "inputMainValue", "inputAreaValue", "inputChildValue"],
   props: ["item"],
-  emits: ["moveToPage"],
+  // emits: ["moveToPage"],
   data() {
     return {};
   },
   computed: {
+    propData() {
+      return this.item[1];
+    },
     translationMainWord() {
-      switch (this.item[1].inputMainValue) {
-        case "Movie":
-          return "電影";
-        case "TVDrama":
-          return "電視劇";
-        case "TVShow":
-          return "綜藝";
-        case "Cartoon":
-          return "動漫";
-        default:
-          return "";
-      }
+      const wordMap = {
+        Movie: "電影",
+        TVDrama: "電視劇",
+        TVShow: "綜藝",
+        Cartoon: "動漫",
+      };
+      return wordMap[this.item[1]?.inputMainValue] || "";
     },
     translationAreaWord() {
-      switch (this.item[1].inputAreaValue) {
-        case "CN":
-          return "大陸";
-        case "HK":
-          return "香港";
-        case "TW":
-          return "台灣";
-        case "US":
-          return "美國";
-        case "FR":
-          return "法國";
-        case "UK":
-          return "英國";
-        case "JP":
-          return "日本";
-        case "KR":
-          return "韓國";
-        case "GM":
-          return "德國";
-        case "TH":
-          return "泰國";
-        case "Other":
-          return "其他";
-        default:
-          return "";
-      }
+      const areaMap = {
+        CN: "大陸",
+        HK: "香港",
+        TW: "台灣",
+        US: "美國",
+        FR: "法國",
+        UK: "英國",
+        JP: "日本",
+        KR: "韓國",
+        GM: "德國",
+        TH: "泰國",
+        Other: "其他",
+      };
+      return areaMap[this.item[1]?.inputMainValue] || "";
     },
     translationChildWord() {
-      switch (this.item[1].inputChildValue) {
-        case "tw":
-          return "台灣";
-        case "hk":
-          return "香港";
-        case "cn":
-          return "大陸";
-        case "kr":
-          return "韓國";
-        case "jp":
-          return "日本";
-        case "other":
-          return "其他";
-        case "plot":
-          return "劇情";
-        case "action":
-          return "動作";
-        case "science":
-          return "科幻";
-        case "love":
-          return "愛情";
-        case "war":
-          return "戰爭";
-        case "fear":
-          return "恐怖";
-        case "cartoon":
-          return "動畫電影";
-        default:
-          return "";
+      const childMap = {
+        tw: "台灣",
+        hk: "香港",
+        cn: "大陸",
+        kr: "韓國",
+        jp: "日本",
+        other: "其他",
+        plot: "劇情",
+        action: "動作",
+        science: "科幻",
+        love: "愛情",
+        war: "戰爭",
+        fear: "恐怖",
+        cartoon: "動畫電影",
+      };
+      return childMap[this.item[1]?.inputMainValue] || "";
+    },
+
+    movieName() {
+      return this.item[1]?.movieName || {};
+    },
+    movieYear() {
+      return this.propData?.year || "";
+    },
+    bgcolor() {
+      if (this.item[1]?.watched == 1) {
+        return "bb_green";
+      } else {
+        return "bb_red";
       }
+      // const colorMap = {
+      //   0: "bb_red",
+      //   1: "bb_green",
+      // };
+      // console.log(typeof this.item[1].watched);
+      // return colorMap[this.item[1]?.watched || "bb_red"];
+    },
+    class_favorite() {
+      let favoriteMap = {
+        0: "bi bi-heart text-danger",
+        1: "bi bi-heart-fill text-danger",
+      };
+      return favoriteMap[this.item[1]?.favorite] || "";
     },
   },
   methods: {
     moveToPage(uuid) {
       console.log(uuid);
       console.log(this);
-      this.$emit("moveToPage", uuid);
+      this.$router.push(`/post_detail/${uuid}`);
+
+      // this.$emit("moveToPage", uuid);
     },
   },
 };

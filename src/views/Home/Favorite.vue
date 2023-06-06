@@ -35,10 +35,6 @@ export default {
     };
   },
   methods: {
-    moveToPage(uuid) {
-      console.log(uuid);
-      this.$router.push(`/post_detail/${uuid}`);
-    },
     handleScroll() {
       const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
       if (scrollTop + clientHeight >= scrollHeight) {
