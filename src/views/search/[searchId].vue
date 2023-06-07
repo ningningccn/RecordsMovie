@@ -2,7 +2,7 @@
   <Header></Header>
   <banner :data="data" :mediaType="mediaType"></banner>
   <button @click="openModal()">增加</button>
-  <HeaderModalAdd :modal="modal" :name="name"></HeaderModalAdd>
+  <HeaderModalAdd :modal="modal" :data="data" id="searchModal"></HeaderModalAdd>
 </template>
 
 <script>
@@ -48,7 +48,7 @@ export default {
       });
     },
     openModal() {
-      this.modal = new Modal(document.getElementById("exampleModal"));
+      this.modal = new Modal(document.getElementById("searchModal"));
       this.modal.show();
     },
   },

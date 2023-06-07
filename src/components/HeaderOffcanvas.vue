@@ -20,7 +20,6 @@ console.log(headerData);
 export default {
   computed: {
     header() {
-      console.log(headerData);
       return headerData;
     },
   },

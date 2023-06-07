@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="modal fade"
-    id="exampleModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+  <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -162,7 +157,7 @@ import {
 
 export default {
   inject: ["reload"],
-  props: ["modal", "name"],
+  props: ["modal", "data"],
   data() {
     return {
       isDisable: false,
@@ -186,20 +181,13 @@ export default {
       flag: false,
     };
   },
-  // watch: {
-  //   name: {
-  //     // immediate: true,
-  //     handler(newValue) {
-  //       console.log(newValue);
-  //       if (newValue !== "") {
-  //         // 在 myProp 有值時執行某些操作
-  //         console.log(this.moviePost);
-  //         this.moviePost.movieName = this.name;
-  //         this.moviePost.year = "2023"
-  //       }
-  //     },
-  //   },
-  // },
+  watch: {
+    data(newValue) {
+      console.log(newValue);
+      this.moviePost.movieName = newValue.name;
+      this.moviePost.year = newValue.first_air_date.split("-")[0];
+    },
+  },
   methods: {
     handleFile(e) {
       let vm = this;

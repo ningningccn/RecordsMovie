@@ -46,7 +46,7 @@
           </div>
         </div>
         <!-- Modal -->
-        <HeaderModalAdd :modal="modal"></HeaderModalAdd>
+        <HeaderModalAdd :modal="modal" id="headerModal"></HeaderModalAdd>
         <!-- <div
           class="modal fade"
           id="exampleModal"
@@ -61,8 +61,8 @@
                   <i class="bi bi-x-lg text-light"></i>
                 </button>
               </div> -->
-              <!-- body -->
-              <!-- <div class="modal-body">
+        <!-- body -->
+        <!-- <div class="modal-body">
                 <form @submit.prevent="addData()">
                   <div>
                     <img v-if="showImg" :src="showImg" class="w-75 mx-auto mb-3" />
@@ -152,10 +152,10 @@
                       v-model="moviePost.year"
                       required />
                   </div> -->
-                  <!-- button group -->
-                  <!-- <div class="w-100 d-flex btn-group mb-3"> -->
-                    <!-- favorite -->
-                    <!-- <a
+        <!-- button group -->
+        <!-- <div class="w-100 d-flex btn-group mb-3"> -->
+        <!-- favorite -->
+        <!-- <a
                       class="btn w-50 btn_not_favorite"
                       v-if="moviePost.favorite == 0"
                       @click="addFavorite">
@@ -181,8 +181,8 @@
                       <span>未觀看</span>
                     </a>
                   </div> -->
-                  <!-- star -->
-                  <!-- <div class="starBox d-flex text-warning">
+        <!-- star -->
+        <!-- <div class="starBox d-flex text-warning">
                     <div
                       v-for="n in 5"
                       :key="n"
@@ -258,7 +258,6 @@ import { signOut } from "firebase/auth";
 import Modal from "bootstrap/js/dist/modal";
 import HeaderModalAdd from "@/components/HeaderModalAdd.vue";
 import { headerData } from "@/api/header";
-
 
 import GlobalSearch from "@/components/GlobalSearch.vue";
 
@@ -339,7 +338,7 @@ export default {
       };
     },
     openModal() {
-      this.modal = new Modal(document.getElementById("exampleModal"));
+      this.modal = new Modal(document.getElementById("headerModal"));
       this.modal.show();
     },
     // closeModal() {
