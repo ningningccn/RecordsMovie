@@ -6,17 +6,25 @@
         class="btn-close btn-close-white ms-auto me-3 my-2"
         data-bs-dismiss="offcanvas"
         aria-label="Close"></button>
-      <router-link class="offcanvas_link" to="/movie">電影</router-link>
-      <router-link class="offcanvas_link" to="/tvDrama">電視劇</router-link>
-      <router-link class="offcanvas_link" to="/tvShow">綜藝</router-link>
-      <router-link class="offcanvas_link" to="/cartoon">動漫</router-link>
+      <div v-for="(item, key) in header" :key="item.id">
+        <router-link class="offcanvas_link" :to="`/${key}`">{{ item }} </router-link>
+      </div>
       <router-link class="offcanvas_link mt-auto" to="" @click.prevent="logout()">登出</router-link>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { headerData } from "@/api/header";
+console.log(headerData);
+export default {
+  computed: {
+    header() {
+      console.log(headerData);
+      return headerData;
+    },
+  },
+};
 </script>
 
 <style scoped>

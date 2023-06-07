@@ -16,16 +16,16 @@
           <img src="../assets/logo.png" width="100" />
         </router-link>
         <div class="nav d-none d-md-flex">
-          <router-link class="nav-link" to="" @click="openModal">
+          <router-link class="nav-link" to="" @click="openModal()">
             <i class="bi bi-plus-square"> </i>
           </router-link>
           <button class="btn nav-link outline-0" to="" @click.prevent="globalSearchStatus">
             <i class="bi bi-search"> </i>
           </button>
-          <router-link class="nav-link" to="/movie">電影</router-link>
-          <router-link class="nav-link" to="/tvDrama">電視劇</router-link>
-          <router-link class="nav-link" to="/tvShow">綜藝</router-link>
-          <router-link class="nav-link" to="/cartoon">動漫</router-link>
+          <!-- headerData -->
+          <div v-for="(item, key) in header" :key="item.id">
+            <router-link class="nav-link" :to="`/${key}`">{{ item }} </router-link>
+          </div>
           <div class="dropdown">
             <a
               class="nav-link dropdown-toggle"
@@ -46,8 +46,8 @@
           </div>
         </div>
         <!-- Modal -->
-        <!-- <HeaderModalAdd></HeaderModalAdd> -->
-        <div
+        <HeaderModalAdd :modal="modal"></HeaderModalAdd>
+        <!-- <div
           class="modal fade"
           id="exampleModal"
           tabindex="-1"
@@ -60,9 +60,9 @@
                 <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
                   <i class="bi bi-x-lg text-light"></i>
                 </button>
-              </div>
+              </div> -->
               <!-- body -->
-              <div class="modal-body">
+              <!-- <div class="modal-body">
                 <form @submit.prevent="addData()">
                   <div>
                     <img v-if="showImg" :src="showImg" class="w-75 mx-auto mb-3" />
@@ -94,64 +94,45 @@
                       id="inputGroupSelect01"
                       v-model="moviePost.inputMainValue">
                       <option value="none" selected disabled>請選擇</option>
-                      <option value="Movie">電影</option>
-                      <option value="TVDrama">電視劇</option>
-                      <option value="TVShow">綜藝</option>
-                      <option value="Cartoon">動漫</option>
+                      <option :value="key" v-for="(item, key) in movieType" :key="item.id">
+                        {{ item }}
+                      </option>
                     </select>
                   </div>
                   <div v-if="moviePost.inputMainValue == 'Movie'" class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01">分類</label>
                     <select class="form-select" v-model="moviePost.inputChildValue">
                       <option value="none" selected disabled>請選擇</option>
-                      <option value="plot">劇情</option>
-                      <option value="action">動作</option>
-                      <option value="science">科幻</option>
-                      <option value="love">愛情</option>
-                      <option value="war">戰爭</option>
-                      <option value="fear">恐怖</option>
-                      <option value="cartoon">動畫電影</option>
+                      <option :value="key" v-for="(item, key) in movieCategory" :key="item.id">
+                        {{ item }}
+                      </option>
                     </select>
                   </div>
                   <div v-if="moviePost.inputMainValue == 'Movie'" class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01">地區</label>
                     <select class="form-select" v-model="moviePost.inputAreaValue">
                       <option value="none" selected disabled>請選擇</option>
-                      <option value="CN">大陸</option>
-                      <option value="HK">香港</option>
-                      <option value="TW">台灣</option>
-                      <option value="US">美國</option>
-                      <option value="FR">法國</option>
-                      <option value="UK">英國</option>
-                      <option value="JP">日本</option>
-                      <option value="KR">韓國</option>
-                      <option value="GM">德國</option>
-                      <option value="TH">泰國</option>
-                      <option value="Other">其他</option>
+                      <option :value="key" v-for="(item, key) in movieArea" :key="item.id">
+                        {{ item }}
+                      </option>
                     </select>
                   </div>
                   <div v-if="moviePost.inputMainValue == 'TVDrama'" class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01">類別</label>
                     <select class="form-select" v-model="moviePost.inputChildValue">
                       <option value="none" selected disabled>請選擇</option>
-                      <option value="cn">陸劇</option>
-                      <option value="kr">韓劇</option>
-                      <option value="us">美劇</option>
-                      <option value="jp">日劇</option>
-                      <option value="tw">台劇</option>
-                      <option value="hk">港劇</option>
+                      <option :value="key" v-for="(item, key) in tvDramaCategory" :key="item.id">
+                        {{ item }}
+                      </option>
                     </select>
                   </div>
                   <div v-if="moviePost.inputMainValue == 'TVShow'" class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01">類別</label>
                     <select class="form-select" v-model="moviePost.inputChildValue">
                       <option value="none" selected disabled>請選擇</option>
-                      <option value="tw">台灣</option>
-                      <option value="hk">香港</option>
-                      <option value="cn">大陸</option>
-                      <option value="kr">韓國</option>
-                      <option value="jp">日本</option>
-                      <option value="other">其他</option>
+                      <option :value="key" v-for="(item, key) in tvShowCategory" :key="item.id">
+                        {{ item }}
+                      </option>
                     </select>
                   </div>
                   <div class="input-group mb-3">
@@ -170,30 +151,11 @@
                       placeholder="2022"
                       v-model="moviePost.year"
                       required />
-                    <!-- <span class="input-group-text">集數</span>
-                      <input
-                        type="number"
-                        class="form-control"
-                        placeholder="1集"
-                        required
-                        v-model="moviePost.set"
-                      /> -->
-                  </div>
-                  <!-- <div class="input-group mb-3">
-        <span class="input-group-text">評分</span>
-        <input
-          type="number"
-          placeholder="1~10"
-          min="0"
-          max="10"
-          class="form-control"
-          v-model="moviePost.mark"
-        />
-      </div> -->
+                  </div> -->
                   <!-- button group -->
-                  <div class="w-100 d-flex btn-group mb-3">
+                  <!-- <div class="w-100 d-flex btn-group mb-3"> -->
                     <!-- favorite -->
-                    <a
+                    <!-- <a
                       class="btn w-50 btn_not_favorite"
                       v-if="moviePost.favorite == 0"
                       @click="addFavorite">
@@ -218,9 +180,9 @@
                       <i class="bi bi-eye-slash px-1"></i>
                       <span>未觀看</span>
                     </a>
-                  </div>
+                  </div> -->
                   <!-- star -->
-                  <div class="starBox d-flex text-warning">
+                  <!-- <div class="starBox d-flex text-warning">
                     <div
                       v-for="n in 5"
                       :key="n"
@@ -248,7 +210,10 @@
                   </button>
                 </form>
               </div>
-              <!-- <div class="modal-footer">
+            </div>
+          </div>
+        </div> -->
+        <!-- <div class="modal-footer">
     <button
       type="reset"
       class="btn btn-secondary"
@@ -266,9 +231,7 @@
       X
     </button>
   </div> -->
-            </div>
-          </div>
-        </div>
+
         <!-- mobile offcanvas -->
         <HeaderOffcanvas></HeaderOffcanvas>
         <!-- RWD add new data button -->
@@ -278,26 +241,32 @@
       </div>
     </nav>
   </header>
+
   <GlobalSearch />
 </template>
 
 <script>
 // import { Toast } from "bootstrap";
-import { db, auth } from "../db";
-import { storage } from "../db";
+// import { db, auth } from "../db";
+import { auth } from "../db";
+// import { storage } from "../db";
 // @ is an alias to /src
-import { ref as fireRef, set, push, child } from "firebase/database";
-import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+// import { ref as fireRef, set, push, child } from "firebase/database";
+// import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+// import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import Modal from "bootstrap/js/dist/modal";
-// import HeaderModalAdd from "@/components/HeaderModalAdd.vue";
+import HeaderModalAdd from "@/components/HeaderModalAdd.vue";
+import { headerData } from "@/api/header";
+
+
 import GlobalSearch from "@/components/GlobalSearch.vue";
 
 import HeaderOffcanvas from "@/components/HeaderOffcanvas.vue";
 export default {
   inject: ["reload"],
   components: {
-    // HeaderModalAdd,
+    HeaderModalAdd,
     GlobalSearch,
 
     HeaderOffcanvas,
@@ -306,7 +275,7 @@ export default {
     return {
       isDisable: false,
       isLoading: false,
-      Modal: null,
+      modal: null,
       File: null,
       showImg: "",
       moviePost: {
@@ -324,6 +293,11 @@ export default {
       },
       flag: false,
     };
+  },
+  computed: {
+    header() {
+      return headerData;
+    },
   },
   methods: {
     logout() {
@@ -365,110 +339,110 @@ export default {
       };
     },
     openModal() {
-      this.Modal = new Modal(document.getElementById("exampleModal"));
-      this.Modal.show();
+      this.modal = new Modal(document.getElementById("exampleModal"));
+      this.modal.show();
     },
-    closeModal() {
-      this.Modal.hide();
-    },
+    // closeModal() {
+    //   this.Modal.hide();
+    // },
     // main
-    addData() {
-      this.addDb().then(this.getUrl).then(this.addPost);
-    },
-    //
-    //
-    addDb() {
-      return new Promise((resolve, reject) => {
-        if (this.File) {
-          (this.isDisable = true),
-            (this.isLoading = true),
-            uploadBytes(storageRef(storage, `${this.File.name}`), this.File)
-              .then(() => {
-                resolve(`Uploaded a blob or file!`);
-                // console.log(`Uploaded a blob or file!`)
-              })
-              .catch((error) => {
-                reject(error);
-              });
-        } else {
-          console.log("return");
-          alert("error");
-          return;
-        }
-      });
-    },
-    getUrl() {
-      return new Promise((resolve, reject) => {
-        getDownloadURL(storageRef(storage, `${this.File.name}`))
-          .then((url) => {
-            let vm = this;
-            vm.moviePost.url = url;
-            console.log(url);
-            resolve("getUrl");
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    },
-    addPost() {
-      let vm = this;
-      // var toast = new Toast(document.getElementById("liveToast"));
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const newKey = push(child(fireRef(db), "post")).key;
-          set(fireRef(db, `/user/${user.uid}/post/` + newKey), vm.moviePost);
-          (this.isDisable = false), (this.isLoading = false), vm.Modal.hide();
-          vm.reload();
-        } else {
-          vm.Modal.hide();
-        }
-      });
-    },
-    removeImg() {
-      this.showImg = "";
-    },
-    addFavorite() {
-      let fav = this.moviePost.favorite;
-      if (fav == "1") {
-        this.moviePost.favorite = "0";
-      } else {
-        this.moviePost.favorite = "1";
-      }
-    },
-    addWatch() {
-      let watch = this.moviePost.watched;
-      if (watch == "1") {
-        this.moviePost.watched = "0";
-        console.log("this.moviePost.watched1: ", this.moviePost.watched);
-      } else {
-        this.moviePost.watched = "1";
-        console.log("this.moviePost.watched2: ", this.moviePost.watched);
-      }
-    },
-    // add star
-    enter(n) {
-      //n 取值1-5
-      if (!this.flag) {
-        this.moviePost.mark = n;
-        console.log("this.curIndex: ", this.moviePost.mark);
-      }
-    },
-    out() {
-      if (!this.flag) {
-        // 没有点击过，curIndex值才会变化
-        this.moviePost.mark = -1;
-      }
-    },
-    ok(n) {
-      console.log(this.flag);
-      if (this.flag == false) {
-        this.flag = true;
-      } else {
-        this.flag = false;
-      }
-      this.moviePost.mark = n; // 确认评价的星级数
-    },
+    // addData() {
+    //   this.addDb().then(this.getUrl).then(this.addPost);
+    // },
+    // //
+    // //
+    // addDb() {
+    //   return new Promise((resolve, reject) => {
+    //     if (this.File) {
+    //       (this.isDisable = true),
+    //         (this.isLoading = true),
+    //         uploadBytes(storageRef(storage, `${this.File.name}`), this.File)
+    //           .then(() => {
+    //             resolve(`Uploaded a blob or file!`);
+    //             // console.log(`Uploaded a blob or file!`)
+    //           })
+    //           .catch((error) => {
+    //             reject(error);
+    //           });
+    //     } else {
+    //       console.log("return");
+    //       alert("error");
+    //       return;
+    //     }
+    //   });
+    // },
+    // getUrl() {
+    //   return new Promise((resolve, reject) => {
+    //     getDownloadURL(storageRef(storage, `${this.File.name}`))
+    //       .then((url) => {
+    //         let vm = this;
+    //         vm.moviePost.url = url;
+    //         console.log(url);
+    //         resolve("getUrl");
+    //       })
+    //       .catch((error) => {
+    //         reject(error);
+    //       });
+    //   });
+    // },
+    // addPost() {
+    //   let vm = this;
+    //   // var toast = new Toast(document.getElementById("liveToast"));
+    //   onAuthStateChanged(auth, (user) => {
+    //     if (user) {
+    //       const newKey = push(child(fireRef(db), "post")).key;
+    //       set(fireRef(db, `/user/${user.uid}/post/` + newKey), vm.moviePost);
+    //       (this.isDisable = false), (this.isLoading = false), vm.Modal.hide();
+    //       vm.reload();
+    //     } else {
+    //       vm.Modal.hide();
+    //     }
+    //   });
+    // },
+    // removeImg() {
+    //   this.showImg = "";
+    // },
+    // addFavorite() {
+    //   let fav = this.moviePost.favorite;
+    //   if (fav == "1") {
+    //     this.moviePost.favorite = "0";
+    //   } else {
+    //     this.moviePost.favorite = "1";
+    //   }
+    // },
+    // addWatch() {
+    //   let watch = this.moviePost.watched;
+    //   if (watch == "1") {
+    //     this.moviePost.watched = "0";
+    //     console.log("this.moviePost.watched1: ", this.moviePost.watched);
+    //   } else {
+    //     this.moviePost.watched = "1";
+    //     console.log("this.moviePost.watched2: ", this.moviePost.watched);
+    //   }
+    // },
+    // // add star
+    // enter(n) {
+    //   //n 取值1-5
+    //   if (!this.flag) {
+    //     this.moviePost.mark = n;
+    //     console.log("this.curIndex: ", this.moviePost.mark);
+    //   }
+    // },
+    // out() {
+    //   if (!this.flag) {
+    //     // 没有点击过，curIndex值才会变化
+    //     this.moviePost.mark = -1;
+    //   }
+    // },
+    // ok(n) {
+    //   console.log(this.flag);
+    //   if (this.flag == false) {
+    //     this.flag = true;
+    //   } else {
+    //     this.flag = false;
+    //   }
+    //   this.moviePost.mark = n; // 确认评价的星级数
+    // },
     globalSearchStatus() {
       this.$store.dispatch("globalSearchStatus");
     },

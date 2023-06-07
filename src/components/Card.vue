@@ -49,6 +49,7 @@ export default {
   name: "Card",
   // props: ["backgroundColor", "uuid", "inputMainValue", "inputAreaValue", "inputChildValue"],
   props: ["item"],
+  inject: ["reload"],
   // emits: ["moveToPage"],
   data() {
     return {};
@@ -133,6 +134,7 @@ export default {
       console.log(uuid);
       console.log(this);
       this.$router.push(`/post_detail/${uuid}`);
+      this.reload();
 
       // this.$emit("moveToPage", uuid);
     },

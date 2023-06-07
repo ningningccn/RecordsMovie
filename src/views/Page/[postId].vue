@@ -41,9 +41,9 @@
             <!--  -->
             <div class="fz-5 mt-5">
               <span class="fw-bold">
-                {{ postData.movieName }}
+                {{ movieName }}
               </span>
-              <span class="fz-3"> ( {{ postData.year }} ) </span>
+              <span class="fz-3"> ( {{ movieYear }} ) </span>
             </div>
             <div class="fz-3 mt-3">
               <div v-if="postData.inputMainValue == 'Movie'">
@@ -69,8 +69,8 @@
             </div>
             <!-- star -->
             <div class="fz-3 my-5">
-              <div class="d-flex">
-                個人評分:
+              <div class="d-flex align-items-center">
+                <div class="">個人評分:</div>
                 <div class="starBox d-flex text-warning ms-1">
                   <div v-for="n in 5" :key="n">
                     <span v-if="postData.mark < n">
@@ -84,7 +84,7 @@
                 </div>
               </div>
 
-              <div>紀錄日期: {{ postData.watchDate }}</div>
+              <div>紀錄日期: {{ watchDate }}</div>
             </div>
             <!-- watched or favorite-->
             <div class="fz-0 d-flex">
@@ -315,6 +315,16 @@ export default {
     },
   },
   computed: {
+    movieName() {
+      return this.postData?.movieName;
+    },
+    movieYear() {
+      console.log(this.postData);
+      return this.postData?.year;
+    },
+    movieWatchDate() {
+      return this.postData?.watchDate;
+    },
     aboutMovie() {
       let type = this.postData.inputMainValue;
       let postID = this.number;
@@ -330,78 +340,47 @@ export default {
       return filterB;
     },
     displayCategory() {
-      switch (this.postData.inputMainValue) {
-        case "Movie":
-          return "電影";
-        case "TVDrama":
-          return "電視劇";
-        case "TVShow":
-          return "綜藝";
-        case "Cartoon":
-          return "動漫";
-        default:
-          return "";
-      }
+      const categoryMap = {
+        Movie: "電影",
+        TVDrama: "電視劇",
+        TVShow: "綜藝",
+        Cartoon: "動漫",
+      };
+      return categoryMap[this.postData?.inputMainValue] || "";
     },
     displayChildValue() {
-      switch (this.postData.inputChildValue) {
-        case "plot":
-          return "劇情";
-        case "action":
-          return "動作";
-        case "science":
-          return "科幻";
-        case "love":
-          return "愛情";
-        case "war":
-          return "戰爭";
-        case "fear":
-          return "恐怖";
-        case "cartoon":
-          return "動畫電影";
-        case "tw":
-          return "台灣";
-        case "hk":
-          return "香港";
-        case "cn":
-          return "大陸";
-        case "kr":
-          return "韓國";
-        case "jp":
-          return "日本";
-        case "other":
-          return "其他";
-        default:
-          return "";
-      }
+      const childMap = {
+        plot: "劇情",
+        action: "動作",
+        science: "科幻",
+        love: "愛情",
+        war: "戰爭",
+        fear: "恐怖",
+        cartoon: "動畫電影",
+        tw: "台灣",
+        hk: "香港",
+        cn: "大陸",
+        kr: "韓國",
+        jp: "日本",
+        other: "其他",
+      };
+      return childMap[this.postData?.inputChildValue] || "";
     },
     displayArea() {
-      switch (this.postData.inputAreaValue) {
-        case "CN":
-          return "大陸";
-        case "HK":
-          return "香港";
-        case "TW":
-          return "台灣";
-        case "US":
-          return "美國";
-        case "FR":
-          return "法國";
-        case "UK":
-          return "英國";
-        case "JP":
-          return "日本";
-        case "KR":
-          return "韓國";
-        case "GM":
-          return "德國";
-        case "TH":
-          return "泰國";
-        case "Other":
-          return "其他";
-        default:
-          return "";
-      }
+      const areaMap = {
+        CN: "大陸",
+        HK: "香港",
+        TW: "台灣",
+        US: "美國",
+        FR: "法國",
+        UK: "英國",
+        KR: "日本",
+        JP: "韓國",
+        GM: "德國",
+        TH: "泰國",
+        Other: "其他",
+      };
+      return areaMap[this.postData?.inputAreaValue] || "";
     },
   },
   created() {

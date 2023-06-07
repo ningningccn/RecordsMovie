@@ -1,16 +1,22 @@
 <template>
   <Header></Header>
   <banner :data="data" :mediaType="mediaType"></banner>
+  <button @click="openModal()">增加</button>
+  <HeaderModalAdd :modal="modal" :name="name"></HeaderModalAdd>
 </template>
 
 <script>
 import Header from "@/components/Header.vue";
 import banner from "@/components/search_detail_banner.vue";
+import HeaderModalAdd from "@/components/HeaderModalAdd.vue";
+
+import Modal from "bootstrap/js/dist/modal";
 
 export default {
   components: {
     Header,
     banner,
+    HeaderModalAdd,
   },
   data() {
     return {
@@ -18,7 +24,13 @@ export default {
       api_key: "a44def496d0c387f06b632df3f6cb20e",
       data: {},
       mediaType: "",
+      modal: null,
     };
+  },
+  computed: {
+    name() {
+      return this.data?.name || "";
+    },
   },
   methods: {
     getMovieDetail(id) {
@@ -34,6 +46,10 @@ export default {
         console.log(response);
         this.data = response.data;
       });
+    },
+    openModal() {
+      this.modal = new Modal(document.getElementById("exampleModal"));
+      this.modal.show();
     },
   },
   created() {

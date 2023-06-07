@@ -38,64 +38,45 @@
                 id="inputGroupSelect01"
                 v-model="moviePost.inputMainValue">
                 <option value="none" selected disabled>請選擇</option>
-                <option value="Movie">電影</option>
-                <option value="TVDrama">電視劇</option>
-                <option value="TVShow">綜藝</option>
-                <option value="Cartoon">動漫</option>
+                <option :value="key" v-for="(item, key) in movieType" :key="item.id">
+                  {{ item }}
+                </option>
               </select>
             </div>
             <div v-if="moviePost.inputMainValue == 'Movie'" class="input-group mb-3">
               <label class="input-group-text" for="inputGroupSelect01">分類</label>
               <select class="form-select" v-model="moviePost.inputChildValue">
                 <option value="none" selected disabled>請選擇</option>
-                <option value="plot">劇情</option>
-                <option value="action">動作</option>
-                <option value="science">科幻</option>
-                <option value="love">愛情</option>
-                <option value="war">戰爭</option>
-                <option value="fear">恐怖</option>
-                <option value="cartoon">動畫電影</option>
+                <option :value="key" v-for="(item, key) in movieCategory" :key="item.id">
+                  {{ item }}
+                </option>
               </select>
             </div>
             <div v-if="moviePost.inputMainValue == 'Movie'" class="input-group mb-3">
               <label class="input-group-text" for="inputGroupSelect01">地區</label>
               <select class="form-select" v-model="moviePost.inputAreaValue">
                 <option value="none" selected disabled>請選擇</option>
-                <option value="CN">大陸</option>
-                <option value="HK">香港</option>
-                <option value="TW">台灣</option>
-                <option value="US">美國</option>
-                <option value="FR">法國</option>
-                <option value="UK">英國</option>
-                <option value="JP">日本</option>
-                <option value="KR">韓國</option>
-                <option value="GM">德國</option>
-                <option value="TH">泰國</option>
-                <option value="Other">其他</option>
+                <option :value="key" v-for="(item, key) in movieArea" :key="item.id">
+                  {{ item }}
+                </option>
               </select>
             </div>
             <div v-if="moviePost.inputMainValue == 'TVDrama'" class="input-group mb-3">
               <label class="input-group-text" for="inputGroupSelect01">類別</label>
               <select class="form-select" v-model="moviePost.inputChildValue">
                 <option value="none" selected disabled>請選擇</option>
-                <option value="cn">陸劇</option>
-                <option value="kr">韓劇</option>
-                <option value="us">美劇</option>
-                <option value="jp">日劇</option>
-                <option value="tw">台劇</option>
-                <option value="hk">港劇</option>
+                <option :value="key" v-for="(item, key) in tvDramaCategory" :key="item.id">
+                  {{ item }}
+                </option>
               </select>
             </div>
             <div v-if="moviePost.inputMainValue == 'TVShow'" class="input-group mb-3">
               <label class="input-group-text" for="inputGroupSelect01">類別</label>
               <select class="form-select" v-model="moviePost.inputChildValue">
                 <option value="none" selected disabled>請選擇</option>
-                <option value="tw">台灣</option>
-                <option value="hk">香港</option>
-                <option value="cn">大陸</option>
-                <option value="kr">韓國</option>
-                <option value="jp">日本</option>
-                <option value="other">其他</option>
+                <option :value="key" v-for="(item, key) in tvShowCategory" :key="item.id">
+                  {{ item }}
+                </option>
               </select>
             </div>
             <div class="input-group mb-3">
@@ -110,26 +91,7 @@
                 placeholder="2022"
                 v-model="moviePost.year"
                 required />
-              <!-- <span class="input-group-text">集數</span>
-        <input
-          type="number"
-          class="form-control"
-          placeholder="1集"
-          required
-          v-model="moviePost.set"
-        /> -->
             </div>
-            <!-- <div class="input-group mb-3">
-        <span class="input-group-text">評分</span>
-        <input
-          type="number"
-          placeholder="1~10"
-          min="0"
-          max="10"
-          class="form-control"
-          v-model="moviePost.mark"
-        />
-      </div> -->
             <!-- button group -->
             <div class="w-100 d-flex btn-group mb-3">
               <!-- favorite -->
@@ -177,31 +139,283 @@
             </button>
           </form>
         </div>
-        <!-- <div class="modal-footer">
-    <button
-      type="reset"
-      class="btn btn-secondary"
-      data-bs-dismiss="modal"
-    >
-      Close
-    </button>
-    <button type="button" class="btn btn-primary" @click="addDb">
-      Save changes
-    </button>
-    <button type="button" class="btn btn-primary" @click="uploadFile">
-      upload
-    </button>
-    <button type="button" class="btn btn-primary" @click="closeModal">
-      X
-    </button>
-  </div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { db, auth } from "../db";
+import { storage } from "../db";
+
+import { ref as fireRef, set, push, child } from "firebase/database";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { onAuthStateChanged } from "firebase/auth";
+// import Modal from "bootstrap/js/dist/modal";
+import {
+  movieTypeMap,
+  movieCategoryMap,
+  movieAreaMap,
+  tvDramaCategoryMap,
+  tvShowCategory,
+} from "@/data/header-modal-add";
+
+export default {
+  inject: ["reload"],
+  props: ["modal", "name"],
+  data() {
+    return {
+      isDisable: false,
+      isLoading: false,
+      Modal: null,
+      File: null,
+      showImg: "",
+      moviePost: {
+        inputMainValue: "none",
+        inputChildValue: "none",
+        inputAreaValue: "none",
+        movieName: "",
+        year: "",
+        mark: 0,
+        favorite: 0,
+        watched: 1,
+        url: "",
+        watchDate: new Date(+new Date() + 8 * 3600 * 1000).toISOString().substr(0, 10),
+        uploadDate: new Date(+new Date() + 8 * 3600 * 1000).toISOString().substr(0, 10),
+      },
+      flag: false,
+    };
+  },
+  // watch: {
+  //   name: {
+  //     // immediate: true,
+  //     handler(newValue) {
+  //       console.log(newValue);
+  //       if (newValue !== "") {
+  //         // 在 myProp 有值時執行某些操作
+  //         console.log(this.moviePost);
+  //         this.moviePost.movieName = this.name;
+  //         this.moviePost.year = "2023"
+  //       }
+  //     },
+  //   },
+  // },
+  methods: {
+    handleFile(e) {
+      let vm = this;
+      vm.File = e.target.files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(vm.File);
+      reader.onload = (e) => {
+        vm.showImg = e.target.result;
+        var image = new Image();
+        image.src = e.target.result;
+        image.onload = () => {
+          var width = image.width;
+          var height = image.height;
+          console.log("width: ", width);
+          console.log("height: ", height);
+          console.log(width < 420);
+          console.log(height < 420);
+          console.log(width < height);
+
+          if (width > height) {
+            alert("圖片比例不對");
+            vm.showImg = "";
+            return;
+          }
+          if (width < 420 && height < 500) {
+            vm.showImg = "";
+            alert("圖片尺寸沒有420 * 500 ");
+          }
+        };
+      };
+    },
+    addData() {
+      this.addDb().then(this.getUrl).then(this.addPost);
+    },
+    addDb() {
+      return new Promise((resolve, reject) => {
+        if (this.File) {
+          (this.isDisable = true),
+            (this.isLoading = true),
+            uploadBytes(storageRef(storage, `${this.File.name}`), this.File)
+              .then(() => {
+                resolve(`Uploaded a blob or file!`);
+                // console.log(`Uploaded a blob or file!`)
+              })
+              .catch((error) => {
+                reject(error);
+              });
+        } else {
+          console.log("return");
+          alert("error");
+          return;
+        }
+      });
+    },
+    getUrl() {
+      return new Promise((resolve, reject) => {
+        getDownloadURL(storageRef(storage, `${this.File.name}`))
+          .then((url) => {
+            let vm = this;
+            vm.moviePost.url = url;
+            console.log(url);
+            resolve("getUrl");
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    addPost() {
+      let vm = this;
+      // var toast = new Toast(document.getElementById("liveToast"));
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const newKey = push(child(fireRef(db), "post")).key;
+          set(fireRef(db, `/user/${user.uid}/post/` + newKey), vm.moviePost);
+          console.log(this.modal);
+          (this.isDisable = false), (this.isLoading = false), this.modal.hide();
+          this.reload();
+        } else {
+          this.modal.hide();
+        }
+      });
+    },
+    removeImg() {
+      this.showImg = "";
+    },
+    addFavorite() {
+      let fav = this.moviePost.favorite;
+      if (fav == "1") {
+        this.moviePost.favorite = "0";
+      } else {
+        this.moviePost.favorite = "1";
+      }
+    },
+    addWatch() {
+      let watch = this.moviePost.watched;
+      if (watch == "1") {
+        this.moviePost.watched = "0";
+        console.log("this.moviePost.watched1: ", this.moviePost.watched);
+      } else {
+        this.moviePost.watched = "1";
+        console.log("this.moviePost.watched2: ", this.moviePost.watched);
+      }
+    },
+    // add star
+    enter(n) {
+      //n 取值1-5
+      if (!this.flag) {
+        this.moviePost.mark = n;
+        console.log("this.curIndex: ", this.moviePost.mark);
+      }
+    },
+    out() {
+      if (!this.flag) {
+        // 没有点击过，curIndex值才会变化
+        this.moviePost.mark = -1;
+      }
+    },
+    ok(n) {
+      console.log(this.flag);
+      if (this.flag == false) {
+        this.flag = true;
+      } else {
+        this.flag = false;
+      }
+      this.moviePost.mark = n; // 确认评价的星级数
+    },
+  },
+  computed: {
+    movieType() {
+      return movieTypeMap;
+    },
+    movieCategory() {
+      return movieCategoryMap;
+    },
+    movieArea() {
+      return movieAreaMap;
+    },
+    tvDramaCategory() {
+      return tvDramaCategoryMap;
+    },
+    tvShowCategory() {
+      return tvShowCategory;
+    },
+  },
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+/* modal */
+.modal-header {
+  background-color: #032541;
+}
+/* change img  */
+.changImg_btn {
+  background-color: #032541;
+  color: #fff;
+}
+/* watched btn color  */
+.btn_watched {
+  color: #fff;
+  background-color: #42b983;
+  border-left: none;
+}
+.btn_not_watched {
+  color: #42b983;
+  border-color: #42b983;
+  border-left: none;
+}
+.btn_watched:hover {
+  color: #42b983;
+  border-color: #42b983;
+  background-color: #fff;
+  border-left: none;
+}
+.btn_not_watched:hover {
+  color: #fff;
+  background-color: #42b983;
+  border-left: none;
+}
+/* Favorite btn */
+.btn_not_favorite {
+  color: #fe628e;
+  border-color: #fe628e;
+  border-right: none;
+}
+.btn_not_favorite:hover {
+  color: #ffffff;
+  background-color: #fe628e;
+  border-right: none;
+}
+.btn_favorite {
+  color: #ffffff;
+  background-color: #fe628e;
+  border-color: #fe628e;
+  border-right: none;
+}
+.btn_favorite:hover {
+  color: #fe628e;
+  background-color: #fff;
+  border-right: none;
+}
+/* star  */
+.starBox {
+  font-size: 30px;
+}
+.submit_btn {
+  background-color: #032541;
+  color: #fff;
+}
+
+a > span {
+  font-weight: bold;
+}
+
+.btn:focus {
+  box-shadow: none;
+}
+</style>
