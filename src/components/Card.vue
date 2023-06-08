@@ -4,6 +4,7 @@
     :class="bgcolor"
     @click.prevent="moveToPage(item[0])">
     <img :src="`${item[1].url}`" alt="" class="img-size" />
+    
     <!-- <slot name="img"></slot> -->
     <div class="py-2 px-3">
       <div class="d-flex justify-content-between">

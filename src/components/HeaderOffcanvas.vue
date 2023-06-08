@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { headerData } from "@/api/header";
+import { headerData } from "@/data/header";
 console.log(headerData);
 export default {
   computed: {

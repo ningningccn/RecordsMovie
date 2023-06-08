@@ -19,6 +19,7 @@ router.beforeEach((to, from, next) => {
     console.log(`這需要認證`);
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log(user);
         console.log("存在");
         next();
       } else {

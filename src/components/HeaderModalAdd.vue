@@ -12,12 +12,12 @@
         <div class="modal-body">
           <form @submit.prevent="addData()">
             <div>
-              <img v-if="showImg" :src="showImg" class="w-75 mx-auto mb-3" />
+              <img v-show="showImg" :src="showImg" class="w-75 mx-auto mb-3" />
               <div class="input-group mb-3" v-if="!showImg">
                 <input type="file" accept="image/*" class="form-control" @change="handleFile" />
               </div>
               <div class="input-group mb-3" v-else>
-                <button type="button" class="btn changImg_btn mx-auto" @click="removeImg">
+                <button  type="button" class="btn changImg_btn mx-auto" @click="removeImg">
                   更換照片
                 </button>
               </div>
@@ -184,28 +184,36 @@ export default {
   watch: {
     data(newValue) {
       console.log(newValue);
-      this.moviePost.movieName = newValue.name;
-      this.moviePost.year = newValue.first_air_date.split("-")[0];
+      this.moviePost.movieName = newValue.name || newValue.title || "";
+      let year = newValue?.first_air_date || newValue?.release_date || "";
+      if (year !== "") {
+        this.moviePost.year = year.split("-")[0];
+      }
+      this.showImg = `https://image.tmdb.org/t/p/w500/${newValue.poster_path}`;
+      this.moviePost.url = `https://image.tmdb.org/t/p/w500/${newValue.poster_path}`;
     },
   },
   methods: {
     handleFile(e) {
       let vm = this;
+      console.log();
       vm.File = e.target.files[0];
+      console.log(e.target.files[0]);
       var reader = new FileReader();
       reader.readAsDataURL(vm.File);
       reader.onload = (e) => {
         vm.showImg = e.target.result;
+
         var image = new Image();
         image.src = e.target.result;
         image.onload = () => {
           var width = image.width;
           var height = image.height;
-          console.log("width: ", width);
-          console.log("height: ", height);
-          console.log(width < 420);
-          console.log(height < 420);
-          console.log(width < height);
+          // console.log("width: ", width);
+          // console.log("height: ", height);
+          // console.log(width < 420);
+          // console.log(height < 420);
+          // console.log(width < height);
 
           if (width > height) {
             alert("圖片比例不對");
@@ -220,7 +228,11 @@ export default {
       };
     },
     addData() {
-      this.addDb().then(this.getUrl).then(this.addPost);
+      if (this.File) {
+        this.addDb().then(this.getUrl).then(this.addPost);
+      } else {
+        this.addPost();
+      }
     },
     addDb() {
       return new Promise((resolve, reject) => {
@@ -265,8 +277,10 @@ export default {
           set(fireRef(db, `/user/${user.uid}/post/` + newKey), vm.moviePost);
           console.log(this.modal);
           (this.isDisable = false), (this.isLoading = false), this.modal.hide();
+          this.$router.push("/");
           this.reload();
         } else {
+          this.$router.push("/");
           this.modal.hide();
         }
       });
@@ -333,6 +347,7 @@ export default {
       return tvShowCategory;
     },
   },
+  mounted() {},
 };
 </script>
 

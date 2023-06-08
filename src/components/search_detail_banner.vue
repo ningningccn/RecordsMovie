@@ -9,10 +9,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-4">
-            <img
-              :src="poster"
-              alt=""
-              class="img-fluid" />
+            <img :src="poster" alt="" class="img-fluid" />
           </div>
           <div class="col-md-8 text-start text-white">
             <div class="fz-5 mt-5">
@@ -72,9 +69,9 @@ export default {
       return "mediaType not supported";
     },
     first_air_year() {
-      let first_air_year = this.data.first_air_date;
-      if (first_air_year) {
-        return `(${first_air_year.split("-")[0]})`;
+      let date = this.data?.first_air_date || this.data?.release_date || "";
+      if (date !== "") {
+        return `(${date.split("-")[0]})`;
       }
       return "";
     },

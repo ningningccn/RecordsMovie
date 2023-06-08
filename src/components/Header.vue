@@ -257,7 +257,7 @@ import { auth } from "../db";
 import { signOut } from "firebase/auth";
 import Modal from "bootstrap/js/dist/modal";
 import HeaderModalAdd from "@/components/HeaderModalAdd.vue";
-import { headerData } from "@/api/header";
+import { headerData } from "@/data/header";
 
 import GlobalSearch from "@/components/GlobalSearch.vue";
 
