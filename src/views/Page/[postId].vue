@@ -200,9 +200,12 @@ import Card from "@/components/Card.vue";
 import ModifyModal from "@/components/ModifyModal.vue";
 
 import { Tooltip, Toast } from "bootstrap";
-import { db, auth } from "@/db";
-import { ref, child, get, set, remove } from "firebase/database";
-import { onAuthStateChanged } from "firebase/auth";
+// import { db, auth } from "@/db";
+import { db } from "@/db";
+import { ref, child, get } from "firebase/database";
+// import { onAuthStateChanged } from "firebase/auth";
+
+import { delMovieData, editMovieData } from "@/api";
 
 export default {
   components: {
@@ -231,11 +234,6 @@ export default {
       this.$router.push(`/post_detail/${uuid}`);
       this.reload();
     },
-    // pushRouter(id) {
-    //   console.log("id: ", id);
-    //   this.$router.push(`/post_detail/${id}`);
-    //   this.reload();
-    // },
     getDetail() {
       const dbRef = ref(db);
       get(child(dbRef, `/user/${this.uid}/post/${this.number}`))
@@ -252,31 +250,26 @@ export default {
           console.error(error);
         });
     },
-    state() {
-      return new Promise((resolve, reject) => {
-        var vm = this;
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            vm.uid = user.uid;
-            resolve(`獲取uid`);
-          } else {
-            reject("User is signed out: ");
-          }
-        });
-      });
-    },
-    delPost() {
-      const vm = this;
-      console.log("del");
-      console.log(`user/${vm.uid}/post/${vm.number}`);
-      remove(ref(db, `user/${vm.uid}/post/${vm.number}`));
+    // state() {
+    //   return new Promise((resolve, reject) => {
+    //     var vm = this;
+    //     onAuthStateChanged(auth, (user) => {
+    //       if (user) {
+    //         vm.uid = user.uid;
+    //         resolve(`獲取uid`);
+    //       } else {
+    //         reject("User is signed out: ");
+    //       }
+    //     });
+    //   });
+    // },
+    async delPost() {
+      await delMovieData(this.number);
       this.$router.push("/");
     },
     editPost(result) {
       let data = result;
-      set(ref(db, `/user/${this.uid}/post/${this.number}`), data);
-      this.reload();
-      console.log(`updated`);
+      editMovieData(this.number, data);
     },
     // star
     addFavorite(val) {
@@ -289,7 +282,8 @@ export default {
       if (val == 1) {
         data.favorite = 0;
       }
-      set(ref(db, `/user/${this.uid}/post/${this.number}`), data);
+      editMovieData(this.number, data);
+
       console.log(`updated`);
       toast.show();
     },
@@ -303,7 +297,8 @@ export default {
       if (val == 1) {
         data.watched = 0;
       }
-      set(ref(db, `/user/${this.uid}/post/${this.number}`), data);
+      editMovieData(this.number, data);
+
       toast.show();
       console.log(`updated`);
     },
@@ -316,14 +311,14 @@ export default {
   },
   computed: {
     movieName() {
-      return this.postData?.movieName;
+      return this.postData?.movieName || "";
     },
     movieYear() {
       console.log(this.postData);
-      return this.postData?.year;
+      return this.postData?.year || "";
     },
     movieWatchDate() {
-      return this.postData?.watchDate;
+      return this.postData?.watchDate || "";
     },
     aboutMovie() {
       let type = this.postData.inputMainValue;
@@ -384,8 +379,10 @@ export default {
     },
   },
   created() {
+    this.uid = this.$store.state.userID;
     this.number = this.$route.params.postId;
-    this.state().then(this.getDetail);
+    this.getDetail();
+    // this.state().then(this.getDetail);
     this.$store.dispatch("getDBState");
   },
   updated() {

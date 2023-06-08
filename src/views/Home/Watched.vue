@@ -95,7 +95,6 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch("getDBState");
     window.addEventListener("scroll", this.handleScroll);
   },
 };

@@ -17,7 +17,7 @@
                 <input type="file" accept="image/*" class="form-control" @change="handleFile" />
               </div>
               <div class="input-group mb-3" v-else>
-                <button  type="button" class="btn changImg_btn mx-auto" @click="removeImg">
+                <button type="button" class="btn changImg_btn mx-auto" @click="removeImg">
                   更換照片
                 </button>
               </div>
@@ -140,12 +140,13 @@
 </template>
 
 <script>
-import { db, auth } from "../db";
+// import { db, auth } from "../db";
 import { storage } from "../db";
 
-import { ref as fireRef, set, push, child } from "firebase/database";
+// import { ref as fireRef, set, push, child } from "firebase/database";
 import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import { onAuthStateChanged } from "firebase/auth";
+// import { onAuthStateChanged } from "firebase/auth";
+import { postMovieData } from "@/api";
 // import Modal from "bootstrap/js/dist/modal";
 import {
   movieTypeMap,
@@ -268,22 +269,39 @@ export default {
           });
       });
     },
-    addPost() {
-      let vm = this;
+    async addPost() {
+      let userID = this.$store.state.userID;
+
+      if (userID) {
+        await postMovieData(this.moviePost);
+        this.disable = false;
+        this.isLoading = false;
+        this.reload();
+        this.modal.hide();
+        this.$router.push("/");
+        this.$store.dispatch("getDBState");
+      } else {
+        this.$store.dispatch("getDBState");
+        this.modal.hide();
+        this.$router.push("/");
+      }
+
       // var toast = new Toast(document.getElementById("liveToast"));
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const newKey = push(child(fireRef(db), "post")).key;
-          set(fireRef(db, `/user/${user.uid}/post/` + newKey), vm.moviePost);
-          console.log(this.modal);
-          (this.isDisable = false), (this.isLoading = false), this.modal.hide();
-          this.$router.push("/");
-          this.reload();
-        } else {
-          this.$router.push("/");
-          this.modal.hide();
-        }
-      });
+      // onAuthStateChanged(auth, (user) => {
+      //   if (user) {
+      //     const newKey = push(child(fireRef(db), "post")).key;
+      //     set(fireRef(db, `/user/${user.uid}/post/` + newKey), this.moviePost);
+      //     console.log(this.modal);
+      //     (this.isDisable = false), (this.isLoading = false), this.modal.hide();
+      //     console.log(this);
+      //     this.$router.push("/");
+      //     this.$store.dispatch("getDBState");
+      //     // this.reload();
+      //   } else {
+      //     this.$router.push("/");
+      //     this.modal.hide();
+      //   }
+      // });
     },
     removeImg() {
       this.showImg = "";

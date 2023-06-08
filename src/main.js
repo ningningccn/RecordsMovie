@@ -11,24 +11,19 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
-import { auth } from "@/db";
-import { onAuthStateChanged } from "firebase/auth";
-router.beforeEach((to, from, next) => {
+import { authStateChanged } from "@/api.js";
+router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth) {
-    console.log("to.meta.requiresAuth: ", to.meta.requiresAuth);
-    console.log(`這需要認證`);
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log(user);
-        console.log("存在");
-        next();
-      } else {
-        console.log("沒有登入");
-        next({
-          path: "/login",
-        });
-      }
-    });
+    // console.log("to.meta.requiresAuth: ", to.meta.requiresAuth);
+    // console.log(`這需要認證`);
+    const user = await authStateChanged();
+    if (user) {
+      next();
+    } else {
+      next({
+        path: "/login",
+      });
+    }
   } else {
     console.log("沒有登入");
     next();

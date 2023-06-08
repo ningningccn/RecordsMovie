@@ -3,10 +3,6 @@
 </template>
 
 <script>
-// import {auth } from "@/db";
-// import {
-//   onAuthStateChanged,
-// } from "firebase/auth";
 
 export default {
   name: "Home",
@@ -31,6 +27,9 @@ export default {
       });
     },
   },
+  mounted() {
+    this.$store.dispatch("getDBState");
+  }
 };
 </script>
 

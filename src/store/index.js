@@ -1,7 +1,8 @@
 import { createStore } from "vuex";
-import { db, auth } from "@/db";
-import { ref, child, get } from "firebase/database";
-import { onAuthStateChanged } from "firebase/auth";
+import { authStateChanged, getPostData } from "@/api.js";
+// import { db, auth } from "@/db";
+// import { ref, child, get } from "firebase/database";
+// import { onAuthStateChanged } from "firebase/auth";
 
 export default createStore({
   state: {
@@ -9,8 +10,12 @@ export default createStore({
     userPostData: {},
     isGlobalSearch: false,
   },
+  getters: {
+    userID: (state) => state.userID,
+    userPostData: (state) => state.userPostData,
+  },
   mutations: {
-    GET_DB_STATE(state, val) {
+    GET_DB_UID(state, val) {
       state.userID = val;
     },
     GET_POST_DATA(state, val) {
@@ -21,30 +26,38 @@ export default createStore({
     },
   },
   actions: {
-    getDBState(context) {
-      return new Promise((resolve, reject) => {
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            console.log(user.uid);
-            context.commit("GET_DB_STATE", user.uid);
-            get(child(ref(db), `user/${user.uid}/post/`))
-              .then((snapshot) => {
-                console.log(snapshot.exists());
-                if (snapshot.exists()) {
-                  context.commit("GET_POST_DATA", snapshot.val());
-                } else {
-                  console.log("沒有資料");
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-            resolve(`獲取uid`);
-          } else {
-            reject("User is signed out: ");
-          }
-        });
-      });
+    async getDBState(context) {
+      const user = await authStateChanged();
+      if (user) {
+        context.commit("GET_DB_UID", user.uid);
+        let data = await getPostData(user.uid);
+        if (data) {
+          context.commit("GET_POST_DATA", data);
+        }
+      }
+      // return new Promise((resolve, reject) => {
+      //   onAuthStateChanged(auth, (user) => {
+      //     if (user) {
+      //       console.log(user.uid);
+      //       context.commit("GET_DB_STATE", user.uid);
+      //       get(child(ref(db), `user/${user.uid}/post/`))
+      //         .then((snapshot) => {
+      //           console.log(snapshot.exists());
+      //           if (snapshot.exists()) {
+      //             context.commit("GET_POST_DATA", snapshot.val());
+      //           } else {
+      //             console.log("沒有資料");
+      //           }
+      //         })
+      //         .catch((error) => {
+      //           console.error(error);
+      //         });
+      //       resolve(`獲取uid`);
+      //     } else {
+      //       reject("User is signed out: ");
+      //     }
+      //   });
+      // });
     },
     globalSearchStatus(context) {
       context.commit("globalSearchStatus");
@@ -68,9 +81,5 @@ export default createStore({
     //     }
     //   })
     // }
-  },
-  getters: {
-    userID: (state) => state.userID,
-    userPostData: (state) => state.userPostData,
   },
 });

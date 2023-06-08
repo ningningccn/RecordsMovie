@@ -51,69 +51,8 @@ export default {
       });
       return filterB;
     },
-    // translationMainWord() {
-    //   return function (val) {
-    //     switch (val) {
-    //       case "Movie":
-    //         return "電影";
-    //       case "TVDrama":
-    //         return "電視劇";
-    //       case "TVShow":
-    //         return "綜藝";
-    //       case "Cartoon":
-    //         return "動漫";
-    //     }
-    //   };
-    // },
-    // translationAreaWord() {
-    //   return function (val) {
-    //     switch (val) {
-    //       case "CN":
-    //         return "大陸";
-    //       case "HK":
-    //         return "香港";
-    //       case "TW":
-    //         return "台灣";
-    //       case "US":
-    //         return "美國";
-    //       case "FR":
-    //         return "法國";
-    //       case "UK":
-    //         return "英國";
-    //       case "JP":
-    //         return "日本";
-    //       case "KR":
-    //         return "韓國";
-    //       case "GM":
-    //         return "德國";
-    //       case "TH":
-    //         return "泰國";
-    //       case "Other":
-    //         return "其他";
-    //     }
-    //   };
-    // },
-    // translationChildWord() {
-    //   return function (val) {
-    //     switch (val) {
-    //       case "tw":
-    //         return "台灣";
-    //       case "hk":
-    //         return "香港";
-    //       case "cn":
-    //         return "大陸";
-    //       case "kr":
-    //         return "韓國";
-    //       case "jp":
-    //         return "日本";
-    //       case "other":
-    //         return "其他";
-    //     }
-    //   };
-    // },
   },
   mounted() {
-    this.$store.dispatch("getDBState");
     window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
