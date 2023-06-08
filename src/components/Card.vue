@@ -4,7 +4,6 @@
     :class="bgcolor"
     @click.prevent="moveToPage(item[0])">
     <img :src="`${item[1].url}`" alt="" class="img-size" />
-    
     <!-- <slot name="img"></slot> -->
     <div class="py-2 px-3">
       <div class="d-flex justify-content-between">
@@ -21,18 +20,15 @@
         <div class="d-flex">
           {{ translationMainWord }}
           <!-- <slot name="movieCategory">
-            {{ translationMainWord }}
           </slot> -->
           <div class="ps-1">
             {{ translationAreaWord }}
             <!-- <slot name="movieArea">
-              {{ translationAreaWord }}
             </slot> -->
           </div>
           <div class="ps-1">
             {{ translationChildWord }}
             <!-- <slot name="inputChildValue">
-              {{ translationChildWord }}
             </slot> -->
           </div>
         </div>
@@ -82,7 +78,7 @@ export default {
         TH: "泰國",
         Other: "其他",
       };
-      return areaMap[this.item[1]?.inputMainValue] || "";
+      return areaMap[this.item[1]?.inputAreaValue] || "";
     },
     translationChildWord() {
       const childMap = {
@@ -100,7 +96,7 @@ export default {
         fear: "恐怖",
         cartoon: "動畫電影",
       };
-      return childMap[this.item[1]?.inputMainValue] || "";
+      return childMap[this.item[1]?.inputChildValue] || "";
     },
 
     movieName() {

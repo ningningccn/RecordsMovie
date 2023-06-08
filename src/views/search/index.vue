@@ -25,6 +25,8 @@ import Header from "@/components/Header.vue";
 import SearchCard from "@/components/Page/SearchCard.vue";
 import Footer from "@/components/Footer.vue";
 
+import { searchMovieFetch } from "@/api";
+
 export default {
   components: {
     Header,
@@ -71,14 +73,16 @@ export default {
     });
 
     this.querySearchText = this.$route.query.searchText;
-    let apiUrl = this.url + this.api_key + "&language=zh-TW&query=" + this.querySearchText;
-    // console.log(this.$route.query);
-    console.log(apiUrl);
-    this.axios.get(apiUrl).then((response) => {
-      console.log(response.data);
-      this.searchedData = response.data.results;
-      this.total_results = response.data.total_results;
-    });
+    let searchMovieData = searchMovieFetch(this.querySearchText);
+    console.log(searchMovieData);
+    // let apiUrl = this.url + this.api_key + "&language=zh-TW&query=" + this.querySearchText;
+    // // console.log(this.$route.query);
+    // console.log(apiUrl);
+    // this.axios.get(apiUrl).then((response) => {
+    //   console.log(response.data);
+    //   this.searchedData = response.data.results;
+    //   this.total_results = response.data.total_results;
+    // });
   },
 };
 </script>

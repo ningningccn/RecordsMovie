@@ -2,7 +2,7 @@
   <Header />
   <div
     :style="{
-      backgroundImage: 'url(' + postData.url + ')',
+      backgroundImage: 'url(' + movieData.url + ')',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     }">
@@ -10,7 +10,7 @@
       <div class="container">
         <div class="row">
           <div class="col-12 col-sm-6 col-md-4">
-            <img :src="`${postData.url}`" class="img-fluid" />
+            <img :src="`${movieData.url}`" class="img-fluid" />
           </div>
           <div class="col-9 col-sm-6 col-md-8 mx-auto text-start text-white ps-md-5 my-5 my-sm-0">
             <!-- button dropdown -->
@@ -46,7 +46,7 @@
               <span class="fz-3"> ( {{ movieYear }} ) </span>
             </div>
             <div class="fz-3 mt-3">
-              <div v-if="postData.inputMainValue == 'Movie'">
+              <div v-if="movieData.inputMainValue == 'Movie'">
                 <div>
                   <span>{{ displayCategory }}: </span>
                   <span>{{ displayChildValue }}</span>
@@ -73,10 +73,10 @@
                 <div class="">個人評分:</div>
                 <div class="starBox d-flex text-warning ms-1">
                   <div v-for="n in 5" :key="n">
-                    <span v-if="postData.mark < n">
+                    <span v-if="movieData.mark < n">
                       <i class="bi bi-star"></i>
                     </span>
-                    <span v-if="postData.mark >= n">
+                    <span v-if="movieData.mark >= n">
                       <i class="bi bi-star-fill"></i>
                     </span>
                     <div></div>
@@ -84,11 +84,11 @@
                 </div>
               </div>
 
-              <div>紀錄日期: {{ watchDate }}</div>
+              <div>紀錄日期: {{ movieWatchDate }}</div>
             </div>
             <!-- watched or favorite-->
             <div class="fz-0 d-flex">
-              <div v-if="postData.watched == 0" class="mx-2">
+              <div v-if="movieData.watched == 0" class="mx-2">
                 <button
                   class="btn btn_background btn_not_watched"
                   data-bs-toggle="tooltip"
@@ -100,7 +100,7 @@
                   <i class="bi bi-eye-slash-fill fz-2"></i>
                 </button>
               </div>
-              <div v-if="postData.watched == 1" class="mx-2">
+              <div v-if="movieData.watched == 1" class="mx-2">
                 <button
                   class="btn btn_background btn_watched"
                   data-bs-toggle="tooltip"
@@ -112,7 +112,7 @@
                   <i class="bi bi-eye-fill fz-2"></i>
                 </button>
               </div>
-              <div v-if="postData.favorite == 0" class="mx-2">
+              <div v-if="movieData.favorite == 0" class="mx-2">
                 <button
                   class="btn btn_background btn_not_favorite"
                   data-bs-toggle="tooltip"
@@ -124,7 +124,7 @@
                   <i class="bi bi-heart-fill fz-2"></i>
                 </button>
               </div>
-              <div v-if="postData.favorite == 1" class="mx-2">
+              <div v-if="movieData.favorite == 1" class="mx-2">
                 <button
                   class="btn btn_background btn_favorite"
                   data-bs-toggle="tooltip"
@@ -143,7 +143,7 @@
     </div>
   </div>
   <!-- 修改資料 Modal -->
-  <modify-modal :postData="postData" id="movieDetailModal" @editPostData="editPost"></modify-modal>
+  <modify-modal :postData="movieData" id="movieDetailModal" @editPostData="editPost"></modify-modal>
   <!-- other Movie -->
   <div class="container mt-3">
     <h2 class="text-start p-4">相關類別</h2>
@@ -167,10 +167,10 @@
       aria-atomic="true"
       data-bs-delay="3000">
       <div class="toast-body mx-auto fw-bold">
-        <span class="w-100" v-if="postData.favorite == 1">
+        <span class="w-100" v-if="movieData.favorite == 1">
           <i class="bi bi-heart-fill"></i> 已加入最愛
         </span>
-        <span v-if="postData.favorite == 0"><i class="bi bi-heart"></i> 已取消最愛 </span>
+        <span v-if="movieData.favorite == 0"><i class="bi bi-heart"></i> 已取消最愛 </span>
       </div>
     </div>
   </div>
@@ -184,10 +184,10 @@
       aria-atomic="true"
       data-bs-delay="3000">
       <div class="toast-body mx-auto fw-bold">
-        <span class="w-100" v-if="postData.watched == 1">
+        <span class="w-100" v-if="movieData.watched == 1">
           <i class="bi bi-eye-fill"></i> 已設定觀看
         </span>
-        <span v-if="postData.watched == 0"> <i class="bi bi-eye-slash-fill"></i> 設定未觀看 </span>
+        <span v-if="movieData.watched == 0"> <i class="bi bi-eye-slash-fill"></i> 設定未觀看 </span>
       </div>
     </div>
   </div>
@@ -201,11 +201,11 @@ import ModifyModal from "@/components/ModifyModal.vue";
 
 import { Tooltip, Toast } from "bootstrap";
 // import { db, auth } from "@/db";
-import { db } from "@/db";
-import { ref, child, get } from "firebase/database";
+// import { db } from "@/db";
+// import { ref, child, get } from "firebase/database";
 // import { onAuthStateChanged } from "firebase/auth";
 
-import { delMovieData, editMovieData } from "@/api";
+import { delMovieData, editMovieData, getMovieDetail } from "@/api";
 
 export default {
   components: {
@@ -217,9 +217,9 @@ export default {
   inject: ["reload"],
   data() {
     return {
-      postData: {},
+      movieData: {},
       // 修改用的資料
-      modifyPostData: {},
+      modifyMovieData: {},
       number: "",
       uid: "",
       page: 1,
@@ -234,21 +234,27 @@ export default {
       this.$router.push(`/post_detail/${uuid}`);
       this.reload();
     },
-    getDetail() {
-      const dbRef = ref(db);
-      get(child(dbRef, `/user/${this.uid}/post/${this.number}`))
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            this.postData = snapshot.val();
-            this.modifyPostData = { ...snapshot.val() };
-            console.log(this.postData);
-          } else {
-            console.log("No data available");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    async getDetail() {
+      let data = await getMovieDetail(this.number);
+      console.log(data);
+      if (data) {
+        this.movieData = data;
+        this.modifyMovieData = { ...data };
+      }
+      // const dbRef = ref(db);
+      // get(child(dbRef, `/user/${this.uid}/post/${this.number}`))
+      //   .then((snapshot) => {
+      //     if (snapshot.exists()) {
+      //       this.postData = snapshot.val();
+      //       this.modifyPostData = { ...snapshot.val() };
+      //       console.log(this.postData);
+      //     } else {
+      //       console.log("No data available");
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
     },
     // state() {
     //   return new Promise((resolve, reject) => {
@@ -263,8 +269,8 @@ export default {
     //     });
     //   });
     // },
-    async delPost() {
-      await delMovieData(this.number);
+    delPost() {
+      delMovieData(this.number);
       this.$router.push("/");
     },
     editPost(result) {
@@ -275,14 +281,15 @@ export default {
     addFavorite(val) {
       var toastLiveExample = document.getElementById("favoriteToast");
       var toast = new Toast(toastLiveExample);
-      let data = this.postData;
-      if (val == 0) {
-        data.favorite = 1;
-      }
-      if (val == 1) {
-        data.favorite = 0;
-      }
+      let data = this.movieData;
+      data.favorite = val == 0 ? 1 : 0;
       editMovieData(this.number, data);
+      // if (val == 0) {
+      //   data.favorite = 1;
+      // }
+      // if (val == 1) {
+      //   data.favorite = 0;
+      // }
 
       console.log(`updated`);
       toast.show();
@@ -290,17 +297,18 @@ export default {
     addWatched(val) {
       var toastLiveExample = document.getElementById("watchedToast");
       var toast = new Toast(toastLiveExample);
-      let data = this.postData;
-      if (val == 0) {
-        data.watched = 1;
-      }
-      if (val == 1) {
-        data.watched = 0;
-      }
+      let data = this.movieData;
+      data.watched = val === 0 ? 1 : 0;
       editMovieData(this.number, data);
 
       toast.show();
       console.log(`updated`);
+      // if (val == 0) {
+      //   data.watched = 1;
+      // }
+      // if (val == 1) {
+      //   data.watched = 0;
+      // }
     },
     handleScroll() {
       const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
@@ -311,17 +319,16 @@ export default {
   },
   computed: {
     movieName() {
-      return this.postData?.movieName || "";
+      return this.movieData?.movieName || "";
     },
     movieYear() {
-      console.log(this.postData);
-      return this.postData?.year || "";
+      return this.movieData?.year || "";
     },
     movieWatchDate() {
-      return this.postData?.watchDate || "";
+      return this.movieData?.watchDate || "";
     },
     aboutMovie() {
-      let type = this.postData.inputMainValue;
+      let type = this.movieData.inputMainValue;
       let postID = this.number;
       var Data = this.$store.getters.userPostData;
       let filterA = Object.entries(Data)
@@ -341,7 +348,7 @@ export default {
         TVShow: "綜藝",
         Cartoon: "動漫",
       };
-      return categoryMap[this.postData?.inputMainValue] || "";
+      return categoryMap[this.movieData?.inputMainValue] || "";
     },
     displayChildValue() {
       const childMap = {
@@ -359,7 +366,7 @@ export default {
         jp: "日本",
         other: "其他",
       };
-      return childMap[this.postData?.inputChildValue] || "";
+      return childMap[this.movieData?.inputChildValue] || "";
     },
     displayArea() {
       const areaMap = {
@@ -375,7 +382,7 @@ export default {
         TH: "泰國",
         Other: "其他",
       };
-      return areaMap[this.postData?.inputAreaValue] || "";
+      return areaMap[this.movieData?.inputAreaValue] || "";
     },
   },
   created() {
