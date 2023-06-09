@@ -23,7 +23,7 @@
             <div class="overview">
               <div class="fz-3 mt-3 fw-bold">概要</div>
               <div class="mt-2">
-                {{ data.overview }}
+                {{ overview }}
               </div>
             </div>
           </div>
@@ -81,6 +81,9 @@ export default {
         return this.languageList[language];
       }
       return "";
+    },
+    overview() {
+      return this.data?.overview;
     },
     backdrop_path() {
       let backdrop = this.data.backdrop_path || this.data.poster_path;

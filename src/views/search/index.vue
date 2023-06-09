@@ -11,7 +11,7 @@
     <div class="search-content row g-0">
       <div
         class="col-6 col-md-4 col-lg-3 col-xl-2 px-1 my-1 my-sm-2"
-        v-for="item in searchedData"
+        v-for="item in resultsData"
         :key="item.id">
         <searchCard :item="item" @getMediaID="getMediaDetail"></searchCard>
       </div>
@@ -35,9 +35,7 @@ export default {
   },
   data() {
     return {
-      url: "https://api.themoviedb.org/3/search/multi?api_key=",
-      api_key: "a44def496d0c387f06b632df3f6cb20e",
-      searchedData: [],
+      resultsData: [],
       querySearchText: "",
       searchText: "",
       total_results: 0,
@@ -59,22 +57,29 @@ export default {
       });
     },
   },
-  created() {
-    this.$watch("$route.query", () => {
+  async created() {
+    this.$watch("$route.query", async () => {
       this.querySearchText = this.$route.query.searchText;
-      let apiUrl = this.url + this.api_key + "&language=zh-TW&query=" + this.querySearchText;
-      console.log(this.$route.query);
-      console.log(apiUrl);
-      this.axios.get(apiUrl).then((response) => {
-        console.log(response.data);
-        this.searchedData = response.data.results;
-        this.total_results = response.data.total_results;
-      });
-    });
+      let { results, total } = await searchMovieFetch(this.querySearchText);
+      this.resultsData = results;
+      this.total_results = total;
 
+      // let apiUrl = this.url + this.api_key + "&language=zh-TW&query=" + this.querySearchText;
+      // console.log(this.$route.query);
+      // console.log(apiUrl);
+      // this.axios.get(apiUrl).then((response) => {
+      //   console.log(response.data);
+      //   this.searchedData = response.data.results;
+      //   this.total_results = response.data.total_results;
+      // });
+    });
     this.querySearchText = this.$route.query.searchText;
-    let searchMovieData = searchMovieFetch(this.querySearchText);
-    console.log(searchMovieData);
+    let { results, total } = await searchMovieFetch(this.querySearchText);
+
+    this.resultsData = results;
+    this.total_results = total;
+
+    // console.log(searchMovieData);
     // let apiUrl = this.url + this.api_key + "&language=zh-TW&query=" + this.querySearchText;
     // // console.log(this.$route.query);
     // console.log(apiUrl);

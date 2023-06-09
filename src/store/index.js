@@ -35,51 +35,52 @@ export default createStore({
           context.commit("GET_POST_DATA", data);
         }
       }
-      // return new Promise((resolve, reject) => {
-      //   onAuthStateChanged(auth, (user) => {
-      //     if (user) {
-      //       console.log(user.uid);
-      //       context.commit("GET_DB_STATE", user.uid);
-      //       get(child(ref(db), `user/${user.uid}/post/`))
-      //         .then((snapshot) => {
-      //           console.log(snapshot.exists());
-      //           if (snapshot.exists()) {
-      //             context.commit("GET_POST_DATA", snapshot.val());
-      //           } else {
-      //             console.log("沒有資料");
-      //           }
-      //         })
-      //         .catch((error) => {
-      //           console.error(error);
-      //         });
-      //       resolve(`獲取uid`);
-      //     } else {
-      //       reject("User is signed out: ");
-      //     }
-      //   });
-      // });
     },
     globalSearchStatus(context) {
       context.commit("globalSearchStatus");
     },
-    // delPostDetail(context) {
-    //   return new Promise((resolve, reject) => {
-    //     onAuthStateChanged(auth , (user) => {
-    //       if(user) {
-    //         remove(ref(db, `user/${user.uid}/`))
-    //       }
-    //     })
-    //   })
-    // }
-    // delPostDetail(context) {
-    //   return new Promise((resolve, reject) => {
-    //     onAuthStateChanged(auth, (user) => {
-    //       if (user) {
-    //         console.log(`${user.uid}`)
-    //         remove(ref(db, `/user/$`))
-    //       }
-    //     }
-    //   })
-    // }
   },
 });
+// return new Promise((resolve, reject) => {
+//   onAuthStateChanged(auth, (user) => {
+//     if (user) {
+//       console.log(user.uid);
+//       context.commit("GET_DB_STATE", user.uid);
+//       get(child(ref(db), `user/${user.uid}/post/`))
+//         .then((snapshot) => {
+//           console.log(snapshot.exists());
+//           if (snapshot.exists()) {
+//             context.commit("GET_POST_DATA", snapshot.val());
+//           } else {
+//             console.log("沒有資料");
+//           }
+//         })
+//         .catch((error) => {
+//           console.error(error);
+//         });
+//       resolve(`獲取uid`);
+//     } else {
+//       reject("User is signed out: ");
+//     }
+//   });
+// });
+
+// delPostDetail(context) {
+//   return new Promise((resolve, reject) => {
+//     onAuthStateChanged(auth , (user) => {
+//       if(user) {
+//         remove(ref(db, `user/${user.uid}/`))
+//       }
+//     })
+//   })
+// }
+// delPostDetail(context) {
+//   return new Promise((resolve, reject) => {
+//     onAuthStateChanged(auth, (user) => {
+//       if (user) {
+//         console.log(`${user.uid}`)
+//         remove(ref(db, `/user/$`))
+//       }
+//     }
+//   })
+// }

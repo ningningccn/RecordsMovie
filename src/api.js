@@ -48,12 +48,24 @@ export async function editMovieData(movieID, data) {
 
 let searchUrl = "https://api.themoviedb.org/3/search/multi?api_key=";
 let apiKey = "a44def496d0c387f06b632df3f6cb20e";
+
 // GET Search Data
 export async function searchMovieFetch(query) {
   let apiUrl = `${searchUrl}${apiKey}&language=zh-TW&query=${query}`;
-  console.log(apiUrl);
   const res = await axios.get(apiUrl);
-  return res.data;
+  return {
+    results: res.data.results,
+    total: res.data.total_results,
+  };
 }
 
 // GET The movie DB
+
+// GET Search Movie Detail (searchID)
+export async function getSearchMovieDetail(type, id) {
+  let url = "https://api.themoviedb.org/3/";
+  let apiUrl = `${url}${type}/${id}?api_key=${apiKey}&language=zh-TW`
+
+  const res = await axios.get(apiUrl);
+  return res.data
+}
