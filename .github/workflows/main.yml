@@ -24,6 +24,8 @@ jobs:
         with:
           ref: gh-pages
           create-branch: true
+      - name: Check dist exist?
+        run: ls
       - name: Copy build files
         run: cp -r dist/* .
       - name: Commit changes
