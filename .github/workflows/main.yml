@@ -19,22 +19,33 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - name: Check dist exist?
-        run: ls
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v2
-        with:
-          ref: gh-pages
-          create-branch: true
-      - name: Copy build files
-        run: cp -r dist/* .
-      - name: Commit changes
+      - name: Commit files
         run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git add .
-          git commit -m "Deploy"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cd dist
+          git init
+          git config --local user.email $USER_NAME
+          git config --local user.name $USER_EMAIL
+          git status
+          git remote add origin https://github.com/ningningccn/RecordsMovie.git
+          git checkout -b gh-pages
+          git add --all
+          git commit -m "deploy to Github pages"
+          git push origin gh-pages -f
+          echo 🤘 deploy gh-pages complete.
+#       - name: Checkout gh-pages branch
+#         uses: actions/checkout@v2
+#         with:
+#           ref: gh-pages
+#           create-branch: true
+#       - name: Copy build files
+#         run: cp -r dist/* .
+#       - name: Commit changes
+#         run: |
+#           git config --global user.name "${{ github.actor }}"
+#           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+#           git add .
+#           git commit -m "Deploy"
+#       - name: Push changes
+#         uses: ad-m/github-push-action@master
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
