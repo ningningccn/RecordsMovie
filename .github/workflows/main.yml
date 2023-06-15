@@ -25,7 +25,6 @@ jobs:
           ref: gh-pages
           create-branch: true
       - name: Copy build files
-        run: cp -r dist/* .
       - name: Commit changes
         run: |
           git config --global user.name "${{ github.actor }}"
