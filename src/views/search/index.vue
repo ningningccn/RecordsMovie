@@ -78,7 +78,7 @@ export default {
 
     this.resultsData = results;
     this.total_results = total;
-
+    // 
     // console.log(searchMovieData);
     // let apiUrl = this.url + this.api_key + "&language=zh-TW&query=" + this.querySearchText;
     // // console.log(this.$route.query);
