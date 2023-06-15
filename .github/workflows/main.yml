@@ -23,13 +23,9 @@ jobs:
         run: |
           cd dist
           git init
-          git config --local user.email $USER_NAME
-          git config --local user.name $USER_EMAIL
-          git status
-          git checkout -b gh-pages
-          git add --all
+          git add .
           git commit -m "deploy to Github pages"
-          git push origin gh-pages -f
+          git push -f origin master:gh-pages 
           echo 🤘 deploy gh-pages complete.
 
 #       - name: Checkout gh-pages branch
