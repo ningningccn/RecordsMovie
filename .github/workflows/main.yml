@@ -1,34 +1,55 @@
-name: Build and Deploy
+name: Deploy Code to Release Branch
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+
 jobs:
-  build-and-deploy:
+  build:
+    name: Push to Release Branch
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master branch
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Workflow dispatch event that pushes the current version to the release branch.
+      # From here the secondary production deployment workflow will trigger to build the dependencies.
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          ref: master
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16.x'
-      - name: Install dependencies
-        run: npm install
-      - name: Build
-        run: npm run build
-      - name: Commit files
-        run: |
-          cd dist
-          git init
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git add .
-          git commit -m "deploy to Github pages"
-          git push -f origin master:gh-pages 
-          echo 🤘 deploy gh-pages complete.
+          branch: releases/v4
+          folder: .
+          clean: false
+          single-commit: true
+# name: Build and Deploy
+# on:
+#   push:
+#     branches:
+#       - master
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout master branch
+#         uses: actions/checkout@v2
+#         with:
+#           ref: master
+#       - name: Use Node.js 16.x
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16.x'
+#       - name: Install dependencies
+#         run: npm install
+#       - name: Build
+#         run: npm run build
+#       - name: Commit files
+#         run: |
+#           cd dist
+#           git init
+#           git config --global user.name "${{ github.actor }}"
+#           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+#           git add .
+#           git commit -m "deploy to Github pages"
+#           git push -f origin master:gh-pages 
+#           echo 🤘 deploy gh-pages complete.
 
 #       - name: Checkout gh-pages branch
 #         uses: actions/checkout@v2
